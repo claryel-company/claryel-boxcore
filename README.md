@@ -4,6 +4,14 @@
 
 > **Status:** early public baseline; not production-ready. Private experiments are never described as public implementation. The requested NGI Fediversity support is not an award.
 
+<!-- CLARYEL-NAVIGATION:START -->
+## CLARYEL project navigation
+
+This repository is an accepted public implementation owner inside the CLARYEL project. Before structural work, read the central architecture and routing in [`claryel-company/claryel-platform`](https://github.com/claryel-company/claryel-platform), especially `ASSUMPTIONS.md`, `ARCHITECTURE.md`, `DECISIONS.md`, `REPOSITORIES.md`, `TASK_ROUTING.md`, `DEVELOPMENT_RULES.md`, `TERMINOLOGY.md` and `repository-catalog.yaml`.
+
+Local ownership is declared in [`REPOSITORY.yaml`](REPOSITORY.yaml); agent rules are in [`AGENTS.md`](AGENTS.md); durable handoff is in [`NEXT_STEPS.md`](NEXT_STEPS.md).
+<!-- CLARYEL-NAVIGATION:END -->
+
 ## Speak. Review. Deploy. Roll back.
 
 CLARYEL Box Core is a free and open NixOS control plane for private AI and hardware-integrated edge systems operated by households, professionals and small organisations.

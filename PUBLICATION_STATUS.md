@@ -8,9 +8,9 @@ This is an early public baseline. Private experiments are useful background but 
 
 | Capability | Status | Current public evidence | Next evidence threshold |
 |---|---|---|---|
-| Architecture, threat model and project boundary | `implemented` | Public documents and deterministic consistency checks | Ongoing review with every contract change |
-| Desired-state and hardware-profile schemas | `implemented` | Versioned JSON Schemas and synthetic example | External review and additional negative fixtures |
-| Change-plan contract | `implemented` | Versioned schema and synthetic examples | Runtime producer and consumer tests |
+| Architecture, threat model and project boundary | `experimental` | Public documents and deterministic consistency checks | External review and evidence from the first complete runtime path |
+| Desired-state and hardware-profile schemas | `experimental` | Versioned JSON Schemas and synthetic example | Runtime consumers, negative fixtures and external review |
+| Change-plan contract | `experimental` | Versioned schema and synthetic examples | Runtime producer and consumer tests |
 | Risk policy | `experimental` | Public Rego policy and policy tests | Integration with a public change-plan evaluator |
 | Nix flake | `experimental` | Public flake targeting the supported NixOS release | Reproducible build evidence on clean runners |
 | Baseline NixOS module | `experimental` | Non-destructive module with local state boundaries | NixOS VM integration tests and upgrade evidence |
@@ -36,7 +36,7 @@ Capability status and delivery status are separate dimensions.
 | Grant-readiness revision | `source-change-in-review` | Focused branch and Pull Request evidence pending |
 | Release artefact | `not-released` | No tagged production release is claimed |
 | Managed website source | `owned-elsewhere` | Private managed-web repository owns runtime and deployment |
-| Project site deployment | `externally-verifiable` | Must be confirmed by the exact managed-web workflow run and live audit |
+| Project site deployment | `not-publicly-validated` | Exact managed-web workflow and live-domain evidence must be recorded separately |
 | Reference NixOS deployment | `not-publicly-validated` | Planned grant evidence |
 
 ## Funding status

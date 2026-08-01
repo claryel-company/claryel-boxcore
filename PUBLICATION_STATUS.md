@@ -39,18 +39,24 @@ Capability status and delivery status are separate dimensions.
 | Project site deployment | `not-publicly-validated` | Exact managed-web workflow and live-domain evidence must be recorded separately |
 | Reference NixOS deployment | `not-publicly-validated` | Planned grant evidence |
 
-## Funding status
+## Application and funding status
 
 | State | Value |
 |---|---|
+| Application submission | Confirmed by applicant before 2026-08-01 12:00 CEST |
+| Submission receipt | Exists; retained in the private application record |
 | Requested | EUR 50,000 |
+| Advance requested | No |
 | Negotiated | Not established |
 | Awarded | No award claimed |
 | Paid | EUR 0 claimed |
 | Spent under this grant | EUR 0 claimed |
 
+The submitted application package is not modified retroactively by later repository or website improvements. See `docs/APPLICATION_SUBMISSION_STATUS.md`.
+
 ## Honesty rules
 
+- A submission receipt is not an eligibility decision or award.
 - A private prototype is not public implementation.
 - A source marker is not a passing test.
 - A passing test is not a release.

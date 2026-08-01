@@ -43,6 +43,7 @@ REQUIRED_FILES = (
     "docs/COMPETITIVE_LANDSCAPE.md",
     "docs/GRANT_ALIGNMENT.md",
     "docs/DEMO_AND_EVIDENCE_PLAN.md",
+    "docs/APPLICATION_SUBMISSION_STATUS.md",
     "docs/QUICKSTART.md",
     "docs/FAQ.md",
     "docs/PRIVATE_EXPORT_INVENTORY.md",
@@ -214,6 +215,15 @@ def validate_machine_status() -> list[str]:
         errors.append("site-content/grant.json must declare requestedAmountEUR=50000")
     if grant.get("fundingStatus") != "requested-not-awarded":
         errors.append("site-content/grant.json must declare requested-not-awarded")
+    if grant.get("applicationStatus") != "submitted-confirmed-by-applicant":
+        errors.append("site-content/grant.json must record the confirmed submission state")
+    if grant.get("deadlineMet") is not True:
+        errors.append("site-content/grant.json must record deadlineMet=true")
+    receipt = grant.get("submissionReceipt")
+    if not isinstance(receipt, dict) or receipt.get("exists") is not True:
+        errors.append("site-content/grant.json must record that a submission receipt exists")
+    elif receipt.get("public") is not False:
+        errors.append("submission receipt identifiers must remain private until sanitised")
     if grant.get("advanceRequested") is not False:
         errors.append("site-content/grant.json must declare advanceRequested=false")
 

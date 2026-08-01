@@ -2,9 +2,20 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://boxcore.claryel.space/schemas/hardware-profile.schema.json",
   "title": "CLARYEL Box Core hardware profile",
+  "description": "A privacy-minimised, evidence-based hardware class. It must not contain serial numbers, private addresses, credentials or customer identifiers.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["id", "architecture", "memoryMiB", "storage", "capabilities", "status"],
+  "required": [
+    "id",
+    "architecture",
+    "memoryMiB",
+    "storage",
+    "accelerator",
+    "capabilities",
+    "destructiveOperations",
+    "status",
+    "validation"
+  ],
   "properties": {
     "id": {
       "type": "string",
@@ -18,52 +29,45 @@
       "type": "integer",
       "minimum": 2048
     },
+    "firmwareAssumptions": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1, "maxLength": 240},
+      "maxItems": 30,
+      "uniqueItems": true
+    },
     "storage": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["systemGiB", "dataGiB", "encryptedData"],
+      "required": ["systemGiB", "dataGiB", "encryptedData", "mutableDataSeparated"],
       "properties": {
-        "systemGiB": {
-          "type": "integer",
-          "minimum": 32
-        },
-        "dataGiB": {
-          "type": "integer",
-          "minimum": 16
-        },
-        "encryptedData": {
-          "type": "boolean"
-        }
+        "systemGiB": {"type": "integer", "minimum": 32},
+        "dataGiB": {"type": "integer", "minimum": 16},
+        "encryptedData": {"type": "boolean"},
+        "mutableDataSeparated": {"const": true}
       }
     },
     "accelerator": {
       "type": "object",
       "additionalProperties": false,
+      "required": ["type", "memoryMiB"],
       "properties": {
         "type": {
           "type": "string",
           "enum": ["none", "intel-igpu", "amd-igpu", "nvidia-gpu", "other"]
         },
-        "memoryMiB": {
-          "type": "integer",
-          "minimum": 0
-        }
+        "memoryMiB": {"type": "integer", "minimum": 0},
+        "runtime": {"type": ["string", "null"], "maxLength": 160}
       }
     },
     "capabilities": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["tpm2", "secureBoot", "homeAssistant", "outOfBand"],
+      "required": ["tpm2", "secureBoot", "homeAssistant", "mqtt", "outOfBand"],
       "properties": {
-        "tpm2": {
-          "type": "boolean"
-        },
-        "secureBoot": {
-          "type": "boolean"
-        },
-        "homeAssistant": {
-          "type": "boolean"
-        },
+        "tpm2": {"type": "boolean"},
+        "secureBoot": {"type": "boolean"},
+        "homeAssistant": {"type": "boolean"},
+        "mqtt": {"type": "boolean"},
         "outOfBand": {
           "type": "string",
           "enum": ["none", "intel-amt", "redfish", "ipmi"]
@@ -73,42 +77,76 @@
     "destructiveOperations": {
       "type": "object",
       "additionalProperties": false,
+      "required": ["diskRepartition", "backupDeletion", "keyRotationByVoice", "publicExposureByVoice"],
       "properties": {
-        "diskRepartition": {
-          "const": false
-        },
-        "backupDeletion": {
-          "const": false
-        },
-        "keyRotationByVoice": {
-          "const": false
-        }
+        "diskRepartition": {"const": false},
+        "backupDeletion": {"const": false},
+        "keyRotationByVoice": {"const": false},
+        "publicExposureByVoice": {"const": false}
       }
     },
     "status": {
       "type": "string",
-      "enum": ["planned", "experimental", "validated", "community-validated", "commercially-qualified"]
+      "enum": ["planned", "experimental", "validated", "production-ready"]
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reproducedBy", "commerciallyQualified"],
+      "properties": {
+        "reproducedBy": {
+          "type": "string",
+          "enum": ["none", "claryel", "community", "claryel-and-community"]
+        },
+        "commerciallyQualified": {"type": "boolean"}
+      }
     },
     "tested": {
       "type": "object",
       "additionalProperties": false,
+      "required": ["commit", "release", "date", "evidenceUrl"],
       "properties": {
-        "commit": {
-          "type": "string",
-          "pattern": "^[0-9a-f]{40}$"
+        "commit": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+        "release": {"type": "string", "minLength": 1, "maxLength": 120},
+        "date": {"type": "string", "format": "date"},
+        "evidenceUrl": {"type": "string", "format": "uri"}
+      }
+    },
+    "knownLimitations": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1, "maxLength": 500},
+      "maxItems": 50
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {"enum": ["validated", "production-ready"]}
         },
-        "release": {
-          "type": "string"
+        "required": ["status"]
+      },
+      "then": {
+        "required": ["tested"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {"const": "planned"}
         },
-        "date": {
-          "type": "string",
-          "format": "date"
-        },
-        "evidenceUrl": {
-          "type": "string",
-          "format": "uri"
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "validation": {
+            "properties": {
+              "reproducedBy": {"const": "none"},
+              "commerciallyQualified": {"const": false}
+            }
+          }
         }
       }
     }
-  }
+  ]
 }

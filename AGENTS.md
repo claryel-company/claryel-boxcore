@@ -1,6 +1,10 @@
 # CLARYEL Box Core agent rules
 
-Before any analysis or change, read `README.md`, `REPOSITORY.yaml`, `ARCHITECTURE.md`, `OPEN_SOURCE_SCOPE.md`, `PUBLICATION_STATUS.md`, `SECURITY.md`, `docs/STATUS_MODEL.md`, `docs/LANGUAGE_POLICY.md` and `NEXT_STEPS.md`.
+Before any analysis or change:
+
+1. Open `claryel-company/claryel-platform` and read `ASSUMPTIONS.md`, `ARCHITECTURE.md`, `DECISIONS.md`, related ADRs, `REPOSITORIES.md`, `TASK_ROUTING.md`, `DEVELOPMENT_RULES.md`, `TERMINOLOGY.md` and `repository-catalog.yaml`.
+2. Read this repository's `README.md`, `REPOSITORY.yaml`, `ARCHITECTURE.md`, `OPEN_SOURCE_SCOPE.md`, `PUBLICATION_STATUS.md`, `SECURITY.md`, `docs/STATUS_MODEL.md`, `docs/LANGUAGE_POLICY.md` and `NEXT_STEPS.md`.
+3. Confirm that `claryel-company/claryel-boxcore` is the functional owner of the requested public open-core capability before changing it.
 
 ## Mandatory rules
 
@@ -10,7 +14,7 @@ Before any analysis or change, read `README.md`, `REPOSITORY.yaml`, `ARCHITECTUR
 4. Never publish credentials, personal data, customer data, private topology, serial numbers, private repository URLs, support tickets or unpatched security findings.
 5. Every private-to-public export records provenance, exact reviewed source commit, licence review, sanitisation and excluded material without exposing inaccessible content.
 6. Use the canonical capability statuses defined in `docs/STATUS_MODEL.md`: `planned`, `experimental`, `validated`, `production-ready`, `private-testing`, `withheld-security` and `outside-scope`.
-7. Keep delivery status separate from implementation status. A source change, merged pull request, deployment and browser validation are distinct states.
+7. Keep delivery status separate from implementation status. A source change, merged Pull Request, deployment and browser validation are distinct states.
 8. Never present the requested EUR 50,000 as awarded funding.
 9. Git-managed configuration must never contain secret values or customer content.
 10. Voice requests may propose changes but may not bypass schema validation, policy, review, approval or rollback controls.

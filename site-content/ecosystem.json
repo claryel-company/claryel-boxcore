@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "project": "CLARYEL Box Core",
+  "relations": [
+    {
+      "target": "CLARYEL Box",
+      "url": "https://claryel.com",
+      "relation": "commercial hardware-software implementation and support on the open core",
+      "fundedByProposal": false
+    },
+    {
+      "target": "CLARYEL Space",
+      "url": "https://claryel.space",
+      "relation": "shared managed web runtime and public ecosystem hub",
+      "fundedByProposal": false
+    },
+    {
+      "target": "CLARYEL Web Community",
+      "url": "https://web.claryel.space",
+      "repository": "https://github.com/claryel-company/claryel-web-community",
+      "relation": "adjacent public voice-first and Git-based website workflow",
+      "fundedByProposal": false
+    },
+    {
+      "target": "CLARYEL Solar",
+      "url": "https://claryelsolar.com",
+      "relation": "adjacent energy, Home Assistant and edge-automation reference project",
+      "fundedByProposal": false
+    },
+    {
+      "target": "CLARYEL Funding",
+      "url": "https://funding.claryel.space",
+      "relation": "public funding transparency and financial-planning reference deployment",
+      "fundedByProposal": false
+    },
+    {
+      "target": "CLARYEL ID",
+      "url": "https://id.claryel.com",
+      "relation": "optional shared identity layer",
+      "fundedByProposal": false
+    },
+    {
+      "target": "CLARYEL Universe",
+      "url": "https://claryel.space/universe/",
+      "relation": "interactive map of the public and commercial ecosystem",
+      "fundedByProposal": false
+    }
+  ]
+}

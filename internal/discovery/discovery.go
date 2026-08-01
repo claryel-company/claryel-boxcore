@@ -1,18 +1,15 @@
 // Package discovery exposes non-sensitive local node capabilities.
-// Пакет discovery предоставляет нечувствительные возможности локального узла.
 package discovery
 
 import (
-	"crypto/sha256"
+	"crypto/rand"
 	"encoding/hex"
-	"os"
 	"runtime"
 	"sort"
-	"strings"
+	"sync"
 )
 
-// Capabilities is safe for local diagnostics and public test fixtures.
-// Capabilities безопасна для локальной диагностики и публичных test fixtures.
+// Capabilities is safe for local diagnostics and synthetic public evidence.
 type Capabilities struct {
 	NodeID       string   `json:"node_id"`
 	OS           string   `json:"os"`
@@ -21,10 +18,15 @@ type Capabilities struct {
 	Capabilities []string `json:"capabilities"`
 }
 
+var (
+	identifierOnce sync.Once
+	identifier     string
+	identifierErr  error
+)
+
 // Discover returns a privacy-minimised capability record.
-// Discover возвращает минимизированную с точки зрения приватности запись возможностей.
 func Discover() (Capabilities, error) {
-	hostname, err := os.Hostname()
+	nodeIdentifier, err := processIdentifier()
 	if err != nil {
 		return Capabilities{}, err
 	}
@@ -39,7 +41,7 @@ func Discover() (Capabilities, error) {
 	sort.Strings(capabilities)
 
 	return Capabilities{
-		NodeID:       nodeID(hostname),
+		NodeID:       nodeIdentifier,
 		OS:           runtime.GOOS,
 		Architecture: runtime.GOARCH,
 		CPUThreads:   runtime.NumCPU(),
@@ -47,10 +49,17 @@ func Discover() (Capabilities, error) {
 	}, nil
 }
 
-// nodeID produces a stable pseudonymous identifier without exposing the hostname.
-// nodeID создаёт стабильный псевдонимный идентификатор без раскрытия hostname.
-func nodeID(hostname string) string {
-	material := strings.ToLower(strings.TrimSpace(hostname)) + ":" + runtime.GOOS + ":" + runtime.GOARCH
-	sum := sha256.Sum256([]byte(material))
-	return "node-" + hex.EncodeToString(sum[:8])
+// processIdentifier is random for each process. It is stable long enough to
+// correlate local health calls without creating a persistent hostname-derived
+// fingerprint in logs or public evidence.
+func processIdentifier() (string, error) {
+	identifierOnce.Do(func() {
+		material := make([]byte, 8)
+		if _, err := rand.Read(material); err != nil {
+			identifierErr = err
+			return
+		}
+		identifier = "ephemeral-" + hex.EncodeToString(material)
+	})
+	return identifier, identifierErr
 }

@@ -1,24 +1,43 @@
-# Public export provenance / Происхождение публичного экспорта
+# Public export provenance
 
-This register records reviewed private-to-public exports without copying private Git history.
+This register records reviewed private-to-public exports without copying private Git history. A provenance record establishes origin and review; it does not by itself establish production readiness.
 
-Этот реестр фиксирует проверенные экспорты из приватной области в публичную без копирования приватной Git-истории.
+## BCX-0001 — privacy-minimised node capability service
 
-## Export 2026-08-01-001 — node capability service
-
-| Field / Поле | Value / Значение |
+| Field | Value |
 |---|---|
-| Source owner / Владелец источника | `claryel-company/claryel-node-agent` |
-| Reviewed source commit / Проверенный исходный commit | `bfd46ea40e6aebe48931c160dfb9361d2450cadd` |
-| Reviewed files / Проверенные файлы | `cmd/claryel-node-agent/main.go`, `internal/discovery/discovery.go`, `internal/discovery/discovery_test.go` |
-| Public destination / Публичное назначение | `cmd/boxcore-node/main.go`, `internal/discovery/discovery.go`, `internal/discovery/discovery_test.go` |
-| Export type / Тип экспорта | Clean re-engineering, not history copy / Чистая переработка, не копирование истории |
-| Security changes / Изменения безопасности | Raw hostname removed from public capability output; loopback-only default retained; no privileged mutation. / Raw hostname удалён из публичного вывода возможностей; сохранён loopback по умолчанию; привилегированные изменения отсутствуют. |
-| Licence decision / Решение по лицензии | Public re-engineered code released under Apache-2.0. / Публично переработанный код выпущен под Apache-2.0. |
-| Private material excluded / Исключённый приватный материал | Internal service names, private topology, fleet identifiers, credentials, telemetry and future private worker adapters. / Внутренние имена сервисов, приватная topology, идентификаторы парка, credentials, telemetry и будущие приватные worker adapters. |
+| Source owner | `claryel-company/claryel-node-agent` |
+| Reviewed source commit | `bfd46ea40e6aebe48931c160dfb9361d2450cadd` |
+| Reviewed source files | `cmd/claryel-node-agent/main.go`, `internal/discovery/discovery.go`, `internal/discovery/discovery_test.go` |
+| Public destination | `cmd/boxcore-node/`, `internal/discovery/` |
+| Export type | Clean re-engineering; no private history copied |
+| Public licence | Apache-2.0 |
+| Security changes | Removed raw hostname, addresses, serial numbers, topology, credentials, telemetry and mutation methods; retained loopback default; restricted HTTP interface to GET/HEAD; added timeouts, response hardening and tests |
+| Identifier design | Initial public version used a truncated hostname-derived hash; the grant-readiness revision replaces it with a random process-ephemeral identifier to reduce persistent fingerprinting and cross-log linkability |
+| Private material excluded | Internal service names, fleet identifiers, credentials, private topology, customer telemetry, remote execution and private worker adapters |
+| Public validation | Go unit tests, race test, vet, public repository validation and full-history secret scan |
+| Public status | `experimental` |
 
-## Future records / Будущие записи
+## Required fields for future records
 
-Every later export must add a separate record containing source owner, exact private commit, reviewed files, public destination, sanitisation, licence decision, excluded material and public validation evidence.
+Every later export adds a separate record containing:
 
-Каждый последующий экспорт должен добавлять отдельную запись с владельцем источника, точным приватным commit, проверенными файлами, публичным назначением, очисткой, решением по лицензии, исключёнными материалами и публичным evidence проверки.
+- stable export identifier;
+- source owner and exact reviewed private commit;
+- reviewed source files and public destination;
+- export or re-engineering method;
+- functional-owner approval;
+- secret, personal-data and topology review;
+- licence and third-party-rights decision;
+- dependency and supply-chain review;
+- security changes and excluded material;
+- public validation evidence;
+- canonical implementation status.
+
+## Integrity rule
+
+Never rewrite a provenance record to imply that a later public implementation was identical to the original private source. Add a dated amendment or a new record when the public design materially changes.
+
+## Confidentiality rule
+
+The register may identify an authorised private source repository and exact commit for auditability, but it never reproduces inaccessible source, private URLs, customer identifiers, credentials, topology or embargoed security details.

@@ -1,53 +1,111 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-01T08:42:00+02:00",
-  "overall": "public-baseline-in-progress",
-  "claims": [
-    {
-      "id": "repository-public",
-      "status": "implemented",
-      "evidence": "https://github.com/claryel-company/claryel-boxcore"
-    },
+  "snapshotDate": "2026-08-01",
+  "projectId": "boxcore",
+  "productionReady": false,
+  "capabilities": [
     {
       "id": "architecture",
+      "label": "Architecture, trust boundaries and grant scope",
       "status": "implemented",
-      "evidence": "ARCHITECTURE.md"
+      "evidence": ["ARCHITECTURE.md", "THREAT_MODEL.md", "GRANT_SCOPE.md"],
+      "limitation": "The architecture is ahead of the end-to-end public runtime."
+    },
+    {
+      "id": "desired-state-schema",
+      "label": "Desired-state and hardware-profile schemas",
+      "status": "implemented",
+      "evidence": ["schemas/desired-state.schema.json", "schemas/hardware-profile.schema.json", "examples/systems/home.json"],
+      "limitation": "Additional negative fixtures and external review are still needed."
+    },
+    {
+      "id": "change-plan-contract",
+      "label": "Explainable change-plan contract",
+      "status": "implemented",
+      "evidence": ["schemas/change-plan.schema.json", "examples/change-plan-low-risk.json", "examples/change-plan-high-risk.json"],
+      "limitation": "No public natural-language interpreter produces the contract yet."
+    },
+    {
+      "id": "risk-policy",
+      "label": "Deterministic risk and approval policy",
+      "status": "experimental",
+      "evidence": ["policy/risk-policy.rego", "policy/risk-policy_test.rego"],
+      "limitation": "The policy is not yet integrated with a public runtime."
     },
     {
       "id": "nix-flake",
+      "label": "Nix flake and baseline NixOS module",
       "status": "experimental",
-      "evidence": "flake.nix"
+      "evidence": ["flake.nix", "nix/modules/boxcore.nix"],
+      "limitation": "Clean-runner build, NixOS VM activation and upgrade evidence are incomplete."
     },
     {
-      "id": "nixos-baseline-module",
+      "id": "node-capability-service",
+      "label": "Privacy-minimised node capability service",
       "status": "experimental",
-      "evidence": "nix/modules/boxcore.nix"
+      "evidence": ["cmd/boxcore-node/main.go", "cmd/boxcore-node/main_test.go", "internal/discovery/discovery.go", "docs/PROVENANCE.md"],
+      "limitation": "The service is read-only and local; authenticated integration is not implemented."
     },
     {
       "id": "voice-to-gitops-runtime",
+      "label": "Voice-to-GitOps runtime",
       "status": "planned",
-      "evidence": "PUBLICATION_STATUS.md"
+      "evidence": ["ARCHITECTURE.md", "schemas/change-plan.schema.json", "MILESTONES.md"],
+      "limitation": "No public end-to-end runtime exists."
     },
     {
-      "id": "home-assistant-adapter",
+      "id": "home-assistant-mqtt",
+      "label": "Home Assistant and MQTT adapter",
       "status": "private-testing",
-      "evidence": "PUBLICATION_STATUS.md"
+      "evidence": ["GRANT_SCOPE.md", "docs/PRIVATE_EXPORT_INVENTORY.md"],
+      "limitation": "The generic adapter and safe simulator are not public."
+    },
+    {
+      "id": "activation-rollback",
+      "label": "Atomic activation, health validation and rollback",
+      "status": "planned",
+      "evidence": ["ARCHITECTURE.md", "MILESTONES.md", "docs/DEMO_AND_EVIDENCE_PLAN.md"],
+      "limitation": "No public activation controller or failure-injection evidence exists."
+    },
+    {
+      "id": "mutable-state-recovery",
+      "label": "Mutable-state backup and recovery contracts",
+      "status": "planned",
+      "evidence": ["THREAT_MODEL.md", "docs/DEMO_AND_EVIDENCE_PLAN.md"],
+      "limitation": "No service-specific public restore test exists."
     },
     {
       "id": "hardware-profiles",
+      "label": "Validated hardware profiles",
       "status": "planned",
-      "evidence": "HARDWARE_COMPATIBILITY.md"
+      "evidence": ["HARDWARE_COMPATIBILITY.md", "schemas/hardware-profile.schema.json"],
+      "limitation": "No profile has public validation evidence."
     },
     {
-      "id": "managed-website",
-      "status": "in-progress",
-      "evidence": "https://boxcore.claryel.space"
+      "id": "out-of-band-adapters",
+      "label": "Intel AMT, Redfish and IPMI adapters",
+      "status": "planned",
+      "evidence": ["HARDWARE_COMPATIBILITY.md", "THREAT_MODEL.md"],
+      "limitation": "Adapters remain disabled by default and are not publicly implemented."
+    },
+    {
+      "id": "commercial-support",
+      "label": "Commercial support, CMDB, logistics and SLA",
+      "status": "outside-scope",
+      "evidence": ["GRANT_SCOPE.md", "OPEN_SOURCE_SCOPE.md"],
+      "limitation": "These operations remain in private commercial systems."
     }
   ],
+  "delivery": {
+    "publicSource": "source-change-in-review",
+    "release": "not-released",
+    "referenceDeployment": "not-publicly-validated",
+    "websiteRuntimeOwner": "claryel-company/claryel-space"
+  },
   "knownLimitations": [
-    "The public repository does not yet contain the complete implementation tested in private repositories.",
-    "No production-ready release has been declared.",
-    "Hardware profiles do not yet have public validation evidence.",
-    "The NGI Fediversity grant has not been awarded."
+    "No public end-to-end Voice-to-GitOps runtime exists.",
+    "No production-ready release is claimed.",
+    "No hardware profile has public validation evidence.",
+    "The requested NGI Fediversity support is not presented as awarded."
   ]
 }

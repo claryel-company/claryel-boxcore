@@ -7,21 +7,21 @@
     {
       "id": "architecture",
       "label": "Architecture, trust boundaries and grant scope",
-      "status": "implemented",
+      "status": "experimental",
       "evidence": ["ARCHITECTURE.md", "THREAT_MODEL.md", "GRANT_SCOPE.md"],
-      "limitation": "The architecture is ahead of the end-to-end public runtime."
+      "limitation": "The architecture is ahead of the end-to-end public runtime and has not reached the validated threshold."
     },
     {
       "id": "desired-state-schema",
       "label": "Desired-state and hardware-profile schemas",
-      "status": "implemented",
+      "status": "experimental",
       "evidence": ["schemas/desired-state.schema.json", "schemas/hardware-profile.schema.json", "examples/systems/home.json"],
-      "limitation": "Additional negative fixtures and external review are still needed."
+      "limitation": "Additional negative fixtures, runtime consumers and external review are still needed."
     },
     {
       "id": "change-plan-contract",
       "label": "Explainable change-plan contract",
-      "status": "implemented",
+      "status": "experimental",
       "evidence": ["schemas/change-plan.schema.json", "examples/change-plan-low-risk.json", "examples/change-plan-high-risk.json"],
       "limitation": "No public natural-language interpreter produces the contract yet."
     },

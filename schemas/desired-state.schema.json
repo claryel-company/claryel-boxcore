@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://boxcore.claryel.space/schemas/desired-state.schema.json",
+  "title": "CLARYEL Box Core desired state",
+  "description": "Technical desired state only. Customer data, secret values and credentials are forbidden.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "systemId", "profile", "services", "deployment"],
+  "properties": {
+    "schemaVersion": {
+      "const": "0.1"
+    },
+    "systemId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{1,62}$"
+    },
+    "profile": {
+      "$ref": "hardware-profile.schema.json"
+    },
+    "services": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "enabled", "channel"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{1,62}$"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "channel": {
+            "type": "string",
+            "enum": ["stable", "candidate", "experimental"]
+          },
+          "resources": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "memoryMiB": {
+                "type": "integer",
+                "minimum": 128
+              },
+              "cpuShares": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 1024
+              }
+            }
+          },
+          "secretRefs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^local-secret://[a-zA-Z0-9/_-]+$"
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "deployment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approvalMode", "rollbackOnFailure"],
+      "properties": {
+        "approvalMode": {
+          "type": "string",
+          "enum": ["automatic-low-risk", "always-human", "offline-manual"]
+        },
+        "rollbackOnFailure": {
+          "const": true
+        },
+        "maintenanceWindow": {
+          "type": "string",
+          "pattern": "^([01]\\d|2[0-3]):[0-5]\\d-([01]\\d|2[0-3]):[0-5]\\d$"
+        }
+      }
+    },
+    "remoteAccess": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "adapter": {
+          "type": "string",
+          "enum": ["none", "cloudflare-tunnel", "wireguard", "custom"]
+        },
+        "credentialRef": {
+          "type": "string",
+          "pattern": "^local-secret://[a-zA-Z0-9/_-]+$"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ownerLabel": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "purpose": {
+          "type": "string",
+          "maxLength": 500
+        }
+      }
+    }
+  },
+  "not": {
+    "anyOf": [
+      {"required": ["password"]},
+      {"required": ["token"]},
+      {"required": ["privateKey"]},
+      {"required": ["customerData"]},
+      {"required": ["documents"]}
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-08-01T08:42:00+02:00",
+  "overall": "public-baseline-in-progress",
+  "claims": [
+    {
+      "id": "repository-public",
+      "status": "implemented",
+      "evidence": "https://github.com/claryel-company/claryel-boxcore"
+    },
+    {
+      "id": "architecture",
+      "status": "implemented",
+      "evidence": "ARCHITECTURE.md"
+    },
+    {
+      "id": "nix-flake",
+      "status": "experimental",
+      "evidence": "flake.nix"
+    },
+    {
+      "id": "nixos-baseline-module",
+      "status": "experimental",
+      "evidence": "nix/modules/boxcore.nix"
+    },
+    {
+      "id": "voice-to-gitops-runtime",
+      "status": "planned",
+      "evidence": "PUBLICATION_STATUS.md"
+    },
+    {
+      "id": "home-assistant-adapter",
+      "status": "private-testing",
+      "evidence": "PUBLICATION_STATUS.md"
+    },
+    {
+      "id": "hardware-profiles",
+      "status": "planned",
+      "evidence": "HARDWARE_COMPATIBILITY.md"
+    },
+    {
+      "id": "managed-website",
+      "status": "in-progress",
+      "evidence": "https://boxcore.claryel.space"
+    }
+  ],
+  "knownLimitations": [
+    "The public repository does not yet contain the complete implementation tested in private repositories.",
+    "No production-ready release has been declared.",
+    "Hardware profiles do not yet have public validation evidence.",
+    "The NGI Fediversity grant has not been awarded."
+  ]
+}

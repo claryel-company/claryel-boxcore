@@ -1,28 +1,52 @@
-# Private-to-public export inventory / Реестр экспорта из приватных репозиториев
+# Private-to-public export inventory
 
-**Snapshot / Срез:** 2026-08-01  
-**Rule / Правило:** clean file-level export only; private Git history is never copied. / только чистый пофайловый экспорт; приватная Git-история никогда не копируется.
+**Snapshot:** 2026-08-01  
+**Rule:** clean file-level export or independent public re-engineering only; private Git history is never copied.
 
-| Source repository / Исходный репозиторий | Public candidates / Кандидаты на публикацию | Retained privately / Остаётся закрытым | Initial decision / Первоначальное решение |
+This inventory records candidate capability boundaries, not permission to publish. Every actual export requires a record in `PROVENANCE.md` with the exact reviewed source commit, licence decision, sanitisation and tests.
+
+| Source repository | Candidate public value | Material retained privately | Decision |
 |---|---|---|---|
-| `claryel-platform` | generic architecture principles, public terminology, public repository boundary and accepted public ADR extracts / общие архитектурные принципы, публичная терминология, границы репозитория и выдержки публичных ADR | organisation-wide private governance details and private repository metadata / приватные детали управления и metadata приватных репозиториев | Publish adapted public boundary documents; do not duplicate the central catalogue. / Публиковать адаптированные документы границ, не дублировать центральный каталог. |
-| `claryel-box` | generic service catalogue, state boundaries, non-destructive simulation contracts, health-check concepts / универсальный каталог сервисов, границы состояния, контракты неразрушающей симуляции, принципы health-check | deployment-specific runtime, host names, storage layout, production environment and customer data / deployment-специфичный runtime, имена хостов, схема хранилища, production-среда и клиентские данные | Re-engineer as NixOS modules; do not copy production Compose files unchanged. / Переработать в модули NixOS; не копировать production Compose без изменений. |
-| `claryel-installer` | generic audit, plan, apply, verify and rollback contracts; safe storage checks / универсальные контракты audit, plan, apply, verify и rollback; безопасные проверки хранилища | device serials, exact private disk layout, recovery paths and commercial deployment controls / серийные номера, точная приватная схема дисков, recovery paths и коммерческие deployment-controls | Export interfaces and synthetic tests after sanitisation. / Экспортировать интерфейсы и синтетические тесты после очистки. |
-| `claryel-autoinstall` | generic bootstrap stages, supported-platform matrix and unattended-install contracts / общие этапы bootstrap, матрица платформ и контракты unattended install | private repository-token flow, exact repository set and internal host bootstrap / приватный token flow, точный набор репозиториев и внутренний bootstrap хоста | Replace private synchronisation with public Git-compatible bootstrap. / Заменить приватную синхронизацию публичным Git-совместимым bootstrap. |
-| `claryel-agent-fabric` | generic administrative-intent, plan and orchestration contracts / универсальные контракты административного intent, плана и оркестрации | private role prompts, internal orchestration topology and commercial agents / приватные role prompts, внутренняя topology оркестрации и коммерческие агенты | Export only deterministic interfaces and tests. / Экспортировать только детерминированные интерфейсы и тесты. |
-| `claryel-node-agent` | non-sensitive hardware discovery schema, health model and approved local-action interface / нечувствительная схема обнаружения оборудования, модель состояния и интерфейс разрешённых локальных действий | private fleet identifiers, remote credentials, topology and customer telemetry / идентификаторы приватного парка, удалённые credentials, topology и клиентская телеметрия | Publish capability schema and synthetic probes; keep operational fleet data private. / Опубликовать схему возможностей и синтетические probes; эксплуатационные данные парка оставить закрытыми. |
-| `claryel-integrations` | generic Home Assistant, MQTT, Git, Forgejo, GitHub and optional remote-access interfaces / универсальные интерфейсы Home Assistant, MQTT, Git, Forgejo, GitHub и опционального remote access | vendor credentials, customer endpoints and closed commercial adapters / credentials поставщиков, клиентские endpoints и закрытые коммерческие адаптеры | Export protocol contracts and local simulations only. / Экспортировать только протокольные контракты и локальные симуляции. |
-| `claryel-remote-infrastructure` | consent, audit and least-privilege concepts for optional support sessions / принципы согласия, аудита и минимальных полномочий для опциональных support-сессий | tickets, conversations, SLA, workforce queues, remote sessions and customer telemetry / тикеты, переписка, SLA, очереди специалистов, remote sessions и клиентская телеметрия | Outside Box Core implementation; publish only boundary documentation. / Вне реализации Box Core; публиковать только документацию границы. |
-| `claryel-servicehub` | public equipment-profile vocabulary and lifecycle status concepts / публичная терминология аппаратных профилей и статусов жизненного цикла | CMDB, warehouse, inventory, purchases, logistics, maintenance and customer assets / CMDB, склад, запасы, закупки, логистика, обслуживание и клиентские активы | Outside Box Core runtime; use only generic public hardware vocabulary. / Вне runtime Box Core; использовать только общую публичную аппаратную терминологию. |
-| `claryel-space` | managed-site public content contract, twenty-locale output, public project status and Universe relation / публичный content contract управляемого сайта, двадцать языков, статус проекта и связь Universe | shared private web runtime, Cloudflare configuration, identity internals and production topology / общий приватный web-runtime, Cloudflare-конфигурация, identity internals и production topology | Website runtime remains in Space; canonical Box Core content remains public here. / Runtime сайта остаётся в Space; канонический контент Box Core остаётся публичным здесь. |
-| `claryel-web-community` | voice-first public workflow concepts, Git-compatible change flow, contribution and site-manifest lessons / принципы публичного voice-first workflow, Git-совместимый процесс изменений, contribution и опыт site manifests | product-specific pricing, account limits and unrelated website-builder implementation / продуктовые тарифы, лимиты аккаунтов и несвязанная реализация website builder | Cross-link and share open interfaces without duplicating ownership. / Связать проекты и использовать общие открытые интерфейсы без дублирования владения. |
-| `claryel-funding` | public grant scope, budget, milestone and privacy-controlled publication schemas / публичные схемы грантовых границ, бюджета, milestones и privacy-controlled публикации | customer funding cases, source documents, identifiers and private financial plans / клиентские кейсы финансирования, документы-источники, идентификаторы и приватные финансовые планы | Publish only CLARYEL's own approved project records and generic schemas. / Публиковать только одобренные записи собственных проектов CLARYEL и универсальные схемы. |
-| `claryel-boxcore` | all reviewed open-core code, schemas, documentation, examples, tests and public evidence / весь проверенный код открытого ядра, схемы, документация, примеры, тесты и публичные evidence | nothing customer-specific; security embargoes may temporarily delay individual fixes / ничего клиентского; security embargo может временно задержать отдельные исправления | Authoritative public destination. / Авторитетное публичное назначение. |
+| `claryel-platform` | Generic architecture principles, terminology, repository boundary and public ADR decisions | Organisation-wide governance details and private repository metadata | Publish the Box Core boundary and reference central decisions; do not create a second project-wide catalogue |
+| `claryel-box` | Generic service catalogue, state boundaries, non-destructive simulation and health-check contracts | Deployment-specific runtime, hosts, storage layout, production environment and customer data | Re-engineer as independently useful NixOS modules; do not copy production Compose files unchanged |
+| `claryel-installer` | Audit, plan, apply, verify, rollback and storage-safety contracts | Device identifiers, exact private disk layouts, recovery locations and commercial deployment controls | Export interfaces and synthetic failure tests after sanitisation |
+| `claryel-autoinstall` | Bootstrap stages, supported-platform matrix and unattended-install contracts | Private repository-token flow, exact internal repository set and host bootstrap | Replace private synchronisation with a public Git-compatible bootstrap contract |
+| `claryel-agent-fabric` | Administrative-intent, change-plan and orchestration contracts | Private role prompts, internal orchestration topology and commercial agents | Export deterministic interfaces and adversarial tests only |
+| `claryel-node-agent` | Privacy-minimised hardware discovery, health model and approved local-action interface | Fleet identifiers, remote credentials, topology and customer telemetry | Publish synthetic probes and schemas; keep operational fleet data private |
+| `claryel-integrations` | Home Assistant, MQTT, Git, Forgejo, hosted forge and optional remote-access interfaces | Vendor credentials, customer endpoints and commercial adapters | Export protocol contracts, local simulators and revocation behaviour only |
+| `claryel-remote-infrastructure` | Consent, audit and least-privilege concepts for optional support sessions | Tickets, conversations, SLA, workforce queues, remote sessions and telemetry | Outside Box Core implementation; publish only boundary and consent contracts |
+| `claryel-servicehub` | Generic equipment-profile vocabulary and lifecycle status concepts | CMDB, warehouse, inventory, purchases, logistics, maintenance and customer assets | Outside Box Core runtime; use only generic public vocabulary |
+| `claryel-space` | Managed-site content contract, user-facing localisation, public status and Universe relation | Shared website runtime, Cloudflare configuration, identity internals and production topology | Website runtime and translations stay in Space; canonical project facts stay here |
+| `claryel-web-community` | Voice-first public workflow concepts, Git-compatible changes and contribution lessons | Product-specific plans, account limits and unrelated website-builder implementation | Cross-link and share stable open contracts without duplicating ownership |
+| `claryel-funding` | Public grant-scope, budget, milestone and evidence-publication schemas | Customer funding cases, source documents, identifiers and private financial plans | Publish only approved CLARYEL records and generic schemas |
+| `claryel-boxcore` | Reviewed open-core code, schemas, documentation, examples, tests and evidence | No customer-specific content; embargoed security fixes may be temporarily withheld | Authoritative public destination |
 
-## Export priority / Приоритет экспорта
+## Current export records
 
-1. Public schemas, policy and synthetic examples. / Публичные схемы, политики и синтетические примеры.
-2. Generic NixOS modules newly implemented in public. / Универсальные модули NixOS, заново реализованные публично.
-3. Sanitised Home Assistant and hardware-discovery contracts. / Очищенные контракты Home Assistant и обнаружения оборудования.
-4. Safe installer and rollback patterns. / Безопасные паттерны installer и rollback.
-5. Additional private-tested implementation only after security, licence and provenance review. / Дополнительная приватно протестированная реализация только после security, licence и provenance review.
+| Record | Source | Destination | Status |
+|---|---|---|---|
+| `BCX-0001` | privacy-minimised Node Agent capability discovery | `internal/discovery/` and `cmd/boxcore-node/` | Public experimental implementation; provenance recorded |
+
+No other private capability is claimed as publicly implemented.
+
+## Export priority
+
+1. Versioned schemas, deterministic policy and synthetic examples.
+2. Generic NixOS modules newly implemented in public.
+3. Sanitised Home Assistant/MQTT and hardware-discovery contracts.
+4. Safe activation, health, rollback and mutable-state recovery patterns.
+5. Additional private-tested implementation only after security, licence, provenance and independent-utility review.
+
+## Mandatory export questions
+
+Before approving a candidate, answer:
+
+1. Is the capability owned by Box Core or by another repository?
+2. Can it function without private infrastructure or customer data?
+3. Are all third-party rights compatible with public release?
+4. Does the public result include tests, documentation and a useful failure mode?
+5. Can provenance be recorded without exposing confidential context?
+6. Does publication create a security risk that requires an embargo?
+7. Would re-engineering produce a cleaner and more portable result than copying the private implementation?
+
+A negative answer blocks export until the condition is resolved.

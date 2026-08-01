@@ -1,67 +1,168 @@
 package claryel.boxcore.risk
 
-# English: Deny changes that attempt to place secret values or customer content in configuration.
-# Русский: Запрещать изменения, которые пытаются поместить значения секретов или клиентский контент в конфигурацию.
+import rego.v1
+
+destructive_actions := {
+  "repartition-disk",
+  "delete-backup",
+  "rotate-root-key",
+  "wipe-data",
+}
+
+control_plane_actions := {
+  "run-shell",
+  "modify-policy",
+  "disable-approval",
+  "disable-audit",
+  "disable-rollback",
+}
+
+high_risk_actions := {
+  "expose-public-service",
+  "enable-intel-amt",
+  "enable-redfish",
+  "enable-ipmi",
+}
+
+medium_risk_actions := {
+  "install-service",
+  "remove-service",
+  "change-memory-limit",
+  "change-update-channel",
+}
+
+low_risk_actions := {
+  "enable-metrics",
+  "change-dashboard-layout",
+  "change-log-retention",
+}
+
+known_actions := destructive_actions | control_plane_actions | high_risk_actions | medium_risk_actions | low_risk_actions
+
 deny contains reason if {
-  input.change.containsSecretValue == true
-  reason := "secret values are forbidden in Git-managed configuration"
+  some change in input.changes
+  object.get(change, "containsSecretValue", false) == true
+  reason := sprintf("secret values are forbidden in Git-managed configuration at %s", [change.path])
 }
 
 deny contains reason if {
-  input.change.containsCustomerData == true
-  reason := "customer data is forbidden in Git-managed configuration"
+  some change in input.changes
+  object.get(change, "containsCustomerData", false) == true
+  reason := sprintf("customer data is forbidden in Git-managed configuration at %s", [change.path])
 }
 
-# English: Voice alone may never authorise destructive storage, backup or key-management actions.
-# Русский: Только голос никогда не может разрешить разрушающие операции с хранилищем, backups или ключами.
 deny contains reason if {
-  input.request.channel == "voice"
-  input.change.action in {"repartition-disk", "delete-backup", "rotate-root-key", "wipe-data"}
-  reason := "destructive operations require a separate explicit workflow"
+  some change in input.changes
+  change.action in destructive_actions
+  reason := sprintf("%s requires a separate exceptional workflow and cannot be approved by ordinary Voice-to-GitOps", [change.action])
 }
 
-# English: Public exposure and hardware out-of-band control are always high risk.
-# Русский: Публичное открытие сервиса и out-of-band аппаратное управление всегда относятся к высокому риску.
-high_risk if input.change.action in {"expose-public-service", "enable-intel-amt", "enable-redfish", "enable-ipmi"}
+deny contains reason if {
+  some change in input.changes
+  change.action in control_plane_actions
+  reason := sprintf("%s may not be proposed through the ordinary change-plan contract", [change.action])
+}
 
-# English: Medium-risk actions change installed services or resource allocation.
-# Русский: Действия среднего риска изменяют установленные сервисы или распределение ресурсов.
-medium_risk if input.change.action in {"install-service", "remove-service", "change-memory-limit", "change-update-channel"}
+deny contains reason if {
+  some change in input.changes
+  capability := object.get(change, "requiredCapability", null)
+  capability != null
+  not capability in input.system.declaredCapabilities
+  reason := sprintf("required capability %s is not declared for %s", [capability, input.system.systemId])
+}
 
-# English: Low-risk actions affect observability or non-destructive presentation settings.
-# Русский: Действия низкого риска затрагивают наблюдаемость или неразрушающие настройки представления.
-low_risk if input.change.action in {"enable-metrics", "change-dashboard-layout", "change-log-retention"}
+deny contains reason if {
+  object.get(input.approval, "humanApproved", false) == true
+  object.get(input.approval, "approvedBy", null) == null
+  reason := "human approval is missing an approver identity"
+}
+
+deny contains reason if {
+  object.get(input.approval, "humanApproved", false) == true
+  object.get(input.approval, "approvedAt", null) == null
+  reason := "human approval is missing an approval time"
+}
+
+has_high_risk if {
+  some change in input.changes
+  change.action in high_risk_actions
+}
+
+has_medium_risk if {
+  some change in input.changes
+  change.action in medium_risk_actions
+}
+
+has_low_risk if {
+  some change in input.changes
+  change.action in low_risk_actions
+}
+
+has_unknown_risk if {
+  some change in input.changes
+  not change.action in known_actions
+}
 
 risk_level := "forbidden" if count(deny) > 0
+
 risk_level := "high" if {
   count(deny) == 0
-  high_risk
+  has_high_risk
 }
+
 risk_level := "medium" if {
   count(deny) == 0
-  not high_risk
-  medium_risk
+  not has_high_risk
+  has_medium_risk
 }
-risk_level := "low" if {
-  count(deny) == 0
-  not high_risk
-  not medium_risk
-  low_risk
-}
+
 risk_level := "unknown" if {
   count(deny) == 0
-  not high_risk
-  not medium_risk
-  not low_risk
+  not has_high_risk
+  not has_medium_risk
+  has_unknown_risk
 }
 
-# English: High, medium and unknown actions require explicit human approval.
-# Русский: Действия высокого, среднего и неизвестного риска требуют явного человеческого подтверждения.
+risk_level := "low" if {
+  count(deny) == 0
+  not has_high_risk
+  not has_medium_risk
+  not has_unknown_risk
+  has_low_risk
+}
+
+risk_level := "unknown" if {
+  count(deny) == 0
+  count(input.changes) == 0
+}
+
+default requires_human_approval := false
+
 requires_human_approval if risk_level in {"high", "medium", "unknown"}
 
-# English: Only known low-risk actions may use automatic approval when local policy allows it.
-# Русский: Только известные действия низкого риска могут подтверждаться автоматически, если это разрешает локальная политика.
+requires_human_approval if input.system.approvalMode in {"always-human", "offline-manual"}
+
+default automatic_approval_allowed := false
+
 automatic_approval_allowed if {
   risk_level == "low"
-  input.system.deployment.approvalMode == "automatic-low-risk"
+  input.system.approvalMode == "automatic-low-risk"
+}
+
+human_approval_present if {
+  input.approval.humanApproved == true
+  input.approval.approvedBy != null
+  input.approval.approvedAt != null
+}
+
+default allow := false
+
+allow if {
+  count(deny) == 0
+  automatic_approval_allowed
+}
+
+allow if {
+  count(deny) == 0
+  human_approval_present
 }

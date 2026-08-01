@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-08-01",
+  "projectId": "boxcore",
+  "positioning": "Box Core combines constrained local intent, Git-compatible desired state, deterministic approval, reproducible NixOS activation, Home Assistant physical integration, hardware evidence and recovery for owner-controlled edge systems.",
+  "neighbours": [
+    {
+      "id": "selfprivacy-catalog",
+      "name": "SelfPrivacy Catalog",
+      "officialUrl": "https://nlnet.nl/project/SelfPrivacy-Catalog/",
+      "overlap": ["self-hosting", "provisioning", "updates", "configuration", "monitoring", "backup"],
+      "boxCoreDistinction": ["private AI and complete edge node", "constrained intent-to-Git change", "separate configuration, secret and data planes", "Home Assistant and hardware recovery"],
+      "complementarity": "Reuse compatible service definitions rather than rebuilding a generic catalogue."
+    },
+    {
+      "id": "nix-fleet",
+      "name": "NixOS Agent-Based Deployment Stack",
+      "officialUrl": "https://nlnet.nl/project/Agent-based-deployment/",
+      "overlap": ["NixOS deployment", "partially offline nodes", "status feedback", "multiple devices"],
+      "boxCoreDistinction": ["one or a small number of owner-controlled systems", "local risk approval", "private AI and physical devices", "no support-plane access to customer content"],
+      "complementarity": "Use nix-fleet as an optional transport when central fleet management is required."
+    },
+    {
+      "id": "nixedgeopt",
+      "name": "NixEdgeOpt",
+      "officialUrl": "https://nlnet.nl/project/NixEdgeOpt/",
+      "overlap": ["high-level intent", "NixOS integration", "multi-node resilience"],
+      "boxCoreDistinction": ["human administrative intent to an inspectable diff", "policy and approval before activation", "complete-node and hardware control", "no placement optimiser in initial scope"],
+      "complementarity": "Delegate future placement optimisation after Box Core approves desired state."
+    },
+    {
+      "id": "nixos-verifiedboot",
+      "name": "End-to-end NixOS boot security",
+      "officialUrl": "https://nlnet.nl/project/NixOS-verifiedboot/",
+      "overlap": ["trusted NixOS appliances", "TPM", "Secure Boot", "release integrity"],
+      "boxCoreDistinction": ["intent review", "operating lifecycle", "private AI", "hardware profiles", "recovery"],
+      "complementarity": "Consume compatible verified-boot work instead of reimplementing signing research."
+    },
+    {
+      "id": "nocloud",
+      "name": "Nocloud",
+      "officialUrl": "https://nlnet.nl/project/Nocloud/",
+      "overlap": ["user-controlled infrastructure", "households and small organisations", "regional or local storage"],
+      "boxCoreDistinction": ["operating and management substrate rather than a file application", "AI, automation and physical-system services"],
+      "complementarity": "Package compatible storage services on top of Box Core."
+    },
+    {
+      "id": "bewcloud",
+      "name": "bewCloud",
+      "officialUrl": "https://nlnet.nl/project/bewCloud/",
+      "overlap": ["private self-hosting", "small hardware", "simple operation"],
+      "boxCoreDistinction": ["reproducible node control plane rather than groupware", "policy, hardware and recovery contracts"],
+      "complementarity": "Run lightweight user applications as managed services."
+    },
+    {
+      "id": "magic-nix-vfs",
+      "name": "Magic Nix VFS",
+      "officialUrl": "https://nlnet.nl/project/Magic-Nix-VFS/",
+      "overlap": ["Nix artefact delivery", "edge storage constraints", "reproducibility"],
+      "boxCoreDistinction": ["approval and desired-state control", "activation and hardware validation"],
+      "complementarity": "Use lazy Nix-store distribution as an optional artefact delivery mechanism."
+    }
+  ],
+  "remainingWeaknesses": [
+    "The end-to-end Voice-to-GitOps runtime is not public.",
+    "No hardware profile has public validation evidence.",
+    "The proposal is broader than several neighbouring component projects.",
+    "Founder concentration increases delivery risk.",
+    "The integration can look like assembly unless policy and recovery contracts are technically strong."
+  ]
+}

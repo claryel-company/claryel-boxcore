@@ -1,55 +1,54 @@
-# Contributing to CLARYEL Box Core / Участие в CLARYEL Box Core
+# Contributing to CLARYEL Box Core
 
-Thank you for contributing to the public open core. This repository is intentionally strict because it combines infrastructure, local AI, hardware control and private-data boundaries.
+This repository combines infrastructure, local AI, hardware control and private-data boundaries. Contributions therefore require unusually explicit safety and evidence.
 
-Спасибо за участие в публичном открытом ядре. Репозиторий намеренно использует строгие правила, поскольку объединяет инфраструктуру, локальный ИИ, аппаратное управление и границы приватных данных.
+## Before opening a change
 
-## Before opening a change / До открытия изменения
+1. Read `AGENTS.md`, `ARCHITECTURE.md`, `THREAT_MODEL.md`, `OPEN_SOURCE_SCOPE.md`, `SECURITY.md`, `docs/STATUS_MODEL.md` and `PUBLICATION_STATUS.md`.
+2. Open or reference an issue that states the user outcome, trust boundary, implementation status and acceptance evidence.
+3. Keep one functional change per Pull Request.
+4. Use English for source, documentation, issues, release notes and comments.
+5. Never paste customer data, real credentials, private topology, production logs, serial numbers or unresolved vulnerability details.
 
-1. Read `AGENTS.md`, `ARCHITECTURE.md`, `THREAT_MODEL.md`, `OPEN_SOURCE_SCOPE.md`, `SECURITY.md` and `PUBLICATION_STATUS.md`. / Прочитайте `AGENTS.md`, `ARCHITECTURE.md`, `THREAT_MODEL.md`, `OPEN_SOURCE_SCOPE.md`, `SECURITY.md` и `PUBLICATION_STATUS.md`.
-2. Open or reference an issue describing the user outcome, trust boundary and acceptance evidence. / Откройте или укажите issue с пользовательским результатом, границей доверия и evidence приёмки.
-3. Keep one functional change per Pull Request. / Сохраняйте одно функциональное изменение на Pull Request.
-4. Never paste customer data, real credentials, private topology, production logs or unresolved vulnerability details. / Никогда не добавляйте клиентские данные, реальные credentials, приватную топологию, production logs или сведения о неисправленной уязвимости.
+## Required Pull Request content
 
-## Required change content / Обязательное содержимое изменения
+- user-visible outcome and exact scope;
+- canonical implementation status;
+- tests or reproducible validation evidence;
+- security, privacy and rollback impact;
+- compatibility and migration impact;
+- documentation and synthetic examples;
+- licence and third-party provenance;
+- remaining limitations and follow-up work.
 
-- implementation status: `experimental`, `validated` or `production-ready`; / статус реализации: `experimental`, `validated` или `production-ready`;
-- tests or reproducible validation; / тесты или воспроизводимая проверка;
-- security and rollback impact; / влияние на безопасность и rollback;
-- documentation and examples; / документация и примеры;
-- licence and third-party provenance; / лицензия и происхождение материалов третьих лиц;
-- bilingual code and configuration comments: English first, Russian immediately after. / двуязычные комментарии к коду и конфигурации: сначала английский, сразу затем русский.
+## Private-to-public exports
 
-## Private-to-public exports / Экспорт из приватных репозиториев
+Only authorised CLARYEL maintainers may approve an export from a private repository. Every export must add a record to `docs/PROVENANCE.md` and pass:
 
-Only CLARYEL maintainers may approve an export from a private repository. The export must have an entry in `docs/PROVENANCE.md` and must pass secret, PII, topology, licence and dependency review. Private Git history is never copied.
+- secret and credential scanning;
+- personal-data and customer-data review;
+- private-topology and identifier review;
+- licence and third-party-rights review;
+- dependency and supply-chain review;
+- public tests and human approval.
 
-Только сопровождающие CLARYEL могут подтвердить экспорт из приватного репозитория. Экспорт должен иметь запись в `docs/PROVENANCE.md` и пройти проверку секретов, PII, топологии, лицензий и зависимостей. Приватная Git-история никогда не копируется.
+Private Git history is never copied.
 
-## Validation / Проверка
-
-Run:
-
-Выполните:
+## Validation
 
 ```bash
-# English: Validate public files and obvious disclosure risks.
-# Русский: Проверить публичные файлы и очевидные риски раскрытия.
 python3 scripts/validate_public_baseline.py
-
-# English: Test the public node-capability service.
-# Русский: Протестировать публичный сервис возможностей узла.
 go test ./...
-
-# English: Evaluate the public Nix flake.
-# Русский: Выполнить evaluation публичного Nix flake.
 nix flake check --no-build
 ```
 
-## Review priorities / Приоритеты review
+The Pull Request CI also validates JSON examples against schemas, tests the Rego policy, checks that public text is English-only and scans the complete history for secrets.
 
-1. No private or customer information. / Отсутствие приватной или клиентской информации.
-2. No unreviewed voice-to-shell or model-to-actuator path. / Отсутствие непроверенного пути voice-to-shell или model-to-actuator.
-3. Safe defaults and explicit capability gates. / Безопасные значения по умолчанию и явные capability gates.
-4. Reproducibility and rollback. / Воспроизводимость и rollback.
-5. Independent usefulness without a CLARYEL subscription. / Самостоятельная полезность без подписки CLARYEL.
+## Review priorities
+
+1. No private, customer or security-embargoed information.
+2. No unreviewed voice-to-shell, model-to-actuator or public-exposure path.
+3. Safe defaults, explicit capability gates and least privilege.
+4. Reproducibility, health validation, rollback and mutable-state recovery.
+5. Honest status and independently useful open results.
+6. Complement existing projects instead of duplicating stronger upstream ownership.

@@ -2,28 +2,51 @@
   "schemaVersion": 1,
   "projectId": "boxcore",
   "name": "CLARYEL Box Core",
+  "proposalName": "CLARYEL Box Core: Voice-to-GitOps NixOS for Private AI and Hardware-Integrated Edge Systems",
   "tagline": "Speak. Review. Deploy. Roll back.",
-  "description": "An open NixOS core for private AI and hardware-integrated edge systems, controlled through reviewable Voice-to-GitOps workflows.",
+  "description": "A free and open NixOS control plane for private AI and hardware-integrated edge systems. Local intent becomes an explainable Git-compatible change, passes schema and risk-policy checks, receives approval according to impact, builds a pinned NixOS generation, validates services and hardware and rolls back on failure.",
   "website": "https://boxcore.claryel.space",
   "repository": "https://github.com/claryel-company/claryel-boxcore",
-  "status": "public-beta-preparation",
+  "projectState": "early-public-baseline",
   "openSource": true,
   "productionReady": false,
+  "codeLicence": "Apache-2.0",
+  "documentationLicence": "CC-BY-SA-4.0",
+  "publicRepositoryLanguage": "en",
   "runtimeOwner": "claryel-company/claryel-space",
   "contentOwner": "claryel-company/claryel-boxcore",
+  "websitePresentation": {
+    "immersiveView": true,
+    "classicView": true,
+    "managedLocales": 20,
+    "canonicalTechnicalSourceLanguage": "en"
+  },
   "primaryCapabilities": [
     "nixos",
     "voice-to-gitops",
     "private-ai",
     "home-assistant",
+    "mqtt",
     "hardware-profiles",
-    "atomic-rollback",
-    "recovery"
+    "atomic-activation",
+    "health-validation",
+    "rollback",
+    "mutable-state-recovery"
   ],
   "trustBoundary": {
-    "configurationContainsSecrets": false,
+    "configurationContainsSecretValues": false,
     "configurationContainsCustomerData": false,
     "customerDataRemainsLocal": true,
-    "highRiskChangesRequireApproval": true
-  }
+    "naturalLanguageDirectlyExecutesShell": false,
+    "highRiskChangesRequireHumanApproval": true,
+    "hardwareControlEnabledByDefault": false,
+    "hostedProviderOwnsConfigurationTruth": false
+  },
+  "currentLimitations": [
+    "No public end-to-end Voice-to-GitOps runtime exists.",
+    "No production-ready release is claimed.",
+    "No hardware profile has public validation evidence.",
+    "Home Assistant and MQTT integration remains in private testing.",
+    "Atomic activation and mutable-state recovery remain planned."
+  ]
 }

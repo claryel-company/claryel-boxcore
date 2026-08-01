@@ -1,48 +1,61 @@
-# NGI Fediversity scope / Границы заявки NGI Fediversity
+# NGI Fediversity proposal boundary
 
-## Proposal / Заявка
+## Proposal
 
-**Project:** CLARYEL Box Core — Voice-to-GitOps NixOS for Private AI and Hardware-Integrated Edge Systems  
+**Project:** CLARYEL Box Core: Voice-to-GitOps NixOS for Private AI and Hardware-Integrated Edge Systems  
 **Requested amount:** EUR 50,000  
 **Advance requested:** No  
-**Award status:** Application preparation; no award is claimed.
+**Award status:** requested, not awarded  
+**Default project duration:** up to 12 months, subject to the final MoU
 
-**Проект:** CLARYEL Box Core — Voice-to-GitOps NixOS для приватного ИИ и аппаратно-интегрированных edge-систем  
-**Запрашиваемая сумма:** 50 000 евро  
-**Запрашиваемый аванс:** нет  
-**Статус финансирования:** подготовка заявки; присуждение финансирования не заявляется.
+## Included in the proposal
 
-## Included in the proposal / Входит в заявку
+- reproducible public Nix flakes, NixOS modules and service packaging;
+- local voice or text intent converted into an explainable declarative change plan;
+- Git-compatible branch, commit and review workflow;
+- schema validation, policy evaluation, risk classification and approval gates;
+- strict separation of configuration, secret values and customer content;
+- Home Assistant and MQTT integration for local interfaces, sensors and actuators;
+- pinned builds, dry runs, atomic activation, service and hardware health validation and rollback;
+- backup and recovery contracts for supported mutable services;
+- hardware profiles for x86_64, aarch64, CPU, iGPU, discrete GPU, storage and NAS nodes;
+- capability-gated Intel AMT, Redfish and IPMI adapters on supported systems;
+- CI, tests, security work, accessibility, documentation and public reference evidence;
+- contributor onboarding and public issue triage directly related to Box Core.
 
-- reproducible public NixOS modules and flakes; / воспроизводимые публичные модули NixOS и flakes;
-- local voice or text intent converted into explainable Git changes; / локальное преобразование голосового или текстового намерения в понятные Git-изменения;
-- schema, policy, risk classification and approval gates; / схемы, политики, классификация риска и подтверждения;
-- strict separation of configuration, secrets and customer data; / строгое разделение конфигурации, секретов и клиентских данных;
-- Home Assistant and MQTT integration for sensors, actuators and user interfaces; / интеграция Home Assistant и MQTT для датчиков, исполнительных устройств и интерфейсов;
-- atomic deployment, health validation and rollback; / атомарное развёртывание, проверка состояния и откат;
-- backup and recovery contracts for supported stateful services; / контракты backup и recovery для поддерживаемых stateful-сервисов;
-- hardware profiles for x86_64, aarch64, CPU, iGPU, GPU and NAS; / аппаратные профили x86_64, aarch64, CPU, iGPU, GPU и NAS;
-- capability-gated Intel vPro/AMT, Redfish and IPMI profiles; / профили Intel vPro/AMT, Redfish и IPMI с проверкой возможностей;
-- CI, tests, documentation, accessibility and public reference deployment; / CI, тесты, документация, accessibility и публичный reference deployment;
-- community onboarding and public issue triage directly related to Box Core. / подключение сообщества и публичный triage issues, непосредственно относящихся к Box Core.
+## Explicitly outside the proposal
 
-## Independently financed and outside the proposal / Финансируется отдельно и не входит в заявку
+- customer hardware acquisition and ordinary workstations;
+- commercial CLARYEL Box appliance operations;
+- technical-support tickets, SLA workflows and equipment replacement;
+- customer CMDB, warehouse, logistics and service lifecycle;
+- CLARYEL Web Community, CLARYEL Solar, CLARYEL Funding and CLARYEL ID;
+- the general CLARYEL managed website platform and Universe map;
+- internal accounting automation;
+- a separate external professional audit of the wider commercial ecosystem;
+- production integrations for domestic or industrial robots;
+- customer deployments, customer data and customer-specific configuration.
 
-- customer hardware acquisition; / закупка оборудования клиентов;
-- commercial CLARYEL Box appliance operations; / эксплуатация коммерческого комплекса CLARYEL Box;
-- technical-support control plane, SLA and equipment replacement; / управляющий контур поддержки, SLA и замена оборудования;
-- customer CMDB, warehouse, logistics and service lifecycle; / клиентская CMDB, склад, логистика и сервисный жизненный цикл;
-- CLARYEL Web Community; / CLARYEL Web Community;
-- CLARYEL Solar Community and commercial Solar work; / CLARYEL Solar Community и коммерческие работы Solar;
-- CLARYEL Funding and financial-planning platforms; / CLARYEL Funding и платформы финансового планирования;
-- CLARYEL ID and shared identity runtime; / CLARYEL ID и общий identity runtime;
-- the general CLARYEL website platform and Universe map; / общая web-платформа CLARYEL и карта Universe;
-- internal accounting automation; / внутренняя автоматизация бухгалтерии;
-- a separate external professional audit of the wider commercial ecosystem; / отдельный внешний профессиональный аудит более широкой коммерческой экосистемы;
-- production integrations for domestic or industrial robots. / production-интеграции домашних и промышленных роботов.
+## Existing background
 
-## Sustainability / Устойчивость
+Existing private prototypes, purchased infrastructure and prior engineering are contributed as background. A background component is not a public deliverable until it is separated, reviewed, licensed, sanitised, tested and released in this repository with provenance.
 
-The grant-funded results remain independently usable under a recognised free and open-source licence. CLARYEL may charge for optional qualified hardware-software appliances, deployment, migration, managed updates, monitoring, recovery, equipment replacement, advanced integrations and enterprise-grade support.
+## No double funding
 
-Результаты, профинансированные грантом, остаются пригодными для самостоятельного использования под признанной свободной лицензией. CLARYEL может получать оплату за опциональные квалифицированные аппаратно-программные комплексы, развёртывание, миграцию, управляемые обновления, мониторинг, восстановление, замену оборудования, расширенные интеграции и поддержку enterprise-уровня.
+Company resources, EUR 10,000 of private investment and a separate EUR 10,000 Nuova Impresa 2026 contribution support company formation, prototypes, equipment and general infrastructure. They do not finance the grant-specific open NixOS modules, Voice-to-GitOps runtime, public hardware evidence, tests or documentation.
+
+## Sustainability
+
+Every grant-funded result remains independently usable under a recognised free and open-source licence. CLARYEL may charge for optional qualified appliances, installation, migration, managed stable updates, monitoring, recovery, equipment replacement, advanced integrations and enterprise-grade support.
+
+The commercial service sells convenience, assurance and operational responsibility—not access to the funded source code.
+
+## Boundary test
+
+A proposed deliverable belongs to this grant only when all of the following are true:
+
+1. it is reusable beyond a specific CLARYEL customer;
+2. it can be published without customer data, private topology or confidential security material;
+3. it is required for the open NixOS, Voice-to-GitOps, hardware or recovery result;
+4. it will be released with tests, documentation and evidence;
+5. its cost is not financed by another grant, investment or commercial activity.

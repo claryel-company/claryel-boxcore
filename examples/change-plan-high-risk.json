@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "0.1",
+  "planId": "plan-enable-redfish",
+  "createdAt": "2026-08-01T10:05:00Z",
+  "request": {
+    "channel": "text",
+    "intent": "Enable the Redfish inventory adapter on the isolated management network.",
+    "locale": "en-GB",
+    "synthetic": true
+  },
+  "system": {
+    "systemId": "office-edge",
+    "approvalMode": "always-human",
+    "declaredCapabilities": [
+      "hardware.redfish",
+      "management.network.isolated"
+    ]
+  },
+  "baseRevision": "2222222222222222222222222222222222222222",
+  "proposedRevision": null,
+  "summary": "Enable read-only Redfish inventory on declared compatible hardware; power control remains disabled.",
+  "changes": [
+    {
+      "path": "/profile/capabilities/outOfBand",
+      "action": "enable-redfish",
+      "before": "none",
+      "after": "redfish-read-only",
+      "containsSecretValue": false,
+      "containsCustomerData": false,
+      "requiredCapability": "hardware.redfish"
+    }
+  ],
+  "preconditions": [
+    {
+      "id": "redfish-capability-declared",
+      "description": "The selected hardware profile declares a validated Redfish capability.",
+      "required": true
+    },
+    {
+      "id": "management-network-isolated",
+      "description": "The management endpoint is reachable only through the isolated local management path.",
+      "required": true
+    }
+  ],
+  "validation": [
+    {
+      "id": "inventory-read-only",
+      "description": "The adapter can read the synthetic inventory fixture and cannot invoke power or boot actions.",
+      "required": true
+    },
+    {
+      "id": "credentials-local",
+      "description": "The adapter resolves credentials from the local secret store and emits no secret values.",
+      "required": true
+    }
+  ],
+  "rollback": {
+    "generation": "nixos-generation-87",
+    "automaticOnHealthFailure": true,
+    "mutableStateRecoveryRequired": false,
+    "recoveryContract": null
+  },
+  "approval": {
+    "humanApproved": true,
+    "approvedBy": "synthetic-maintainer",
+    "approvedAt": "2026-08-01T10:06:00Z"
+  }
+}

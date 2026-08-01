@@ -2,81 +2,109 @@
 
 [![Validate public baseline](https://github.com/claryel-company/claryel-boxcore/actions/workflows/validate.yml/badge.svg)](https://github.com/claryel-company/claryel-boxcore/actions/workflows/validate.yml)
 
-> **Public status:** early open baseline. This repository is intentionally incomplete while code is reviewed, sanitised and clean-exported or re-engineered from private CLARYEL repositories. A private prototype is never presented as public implementation. Customer data, credentials, production topology, support operations and commercial service internals will not be published.
->
-> **Публичный статус:** ранняя открытая основа. Репозиторий намеренно неполон, пока код проверяется, очищается, чисто экспортируется или перерабатывается из приватных репозиториев CLARYEL. Приватный прототип никогда не представляется публичной реализацией. Клиентские данные, учётные данные, production-топология, процессы поддержки и внутренние механизмы коммерческого сервиса публиковаться не будут.
+> **Status:** early public baseline; not production-ready. The NGI Fediversity application was submitted before the 1 August 2026 deadline and a receipt exists. EUR 50,000 remains requested, not awarded. Private experiments are never described as public implementation.
 
-## Speak. Review. Deploy. Roll back. / Скажите. Проверьте. Разверните. Откатите.
+<!-- CLARYEL-NAVIGATION:START -->
+## CLARYEL project navigation
 
-CLARYEL Box Core is the free and open NixOS core for reproducible, hardware-aware local infrastructure, private AI, Home Assistant and reviewable Voice-to-GitOps workflows.
+This repository is an accepted public implementation owner inside the CLARYEL project. Before structural work, read the central architecture and routing in [`claryel-company/claryel-platform`](https://github.com/claryel-company/claryel-platform), especially `ASSUMPTIONS.md`, `ARCHITECTURE.md`, `DECISIONS.md`, `REPOSITORIES.md`, `TASK_ROUTING.md`, `DEVELOPMENT_RULES.md`, `TERMINOLOGY.md` and `repository-catalog.yaml`.
 
-CLARYEL Box Core — свободное открытое ядро NixOS для воспроизводимой аппаратно-ориентированной локальной инфраструктуры, приватного ИИ, Home Assistant и проверяемых процессов Voice-to-GitOps.
+Local ownership is declared in [`REPOSITORY.yaml`](REPOSITORY.yaml); agent rules are in [`AGENTS.md`](AGENTS.md); durable handoff is in [`NEXT_STEPS.md`](NEXT_STEPS.md).
+<!-- CLARYEL-NAVIGATION:END -->
 
-`voice or text intent → explainable Git change → schema and policy validation → approval according to risk → pinned NixOS build → dry run → atomic activation → service and hardware health checks → success or rollback`
+## Speak. Review. Deploy. Roll back.
 
-`голосовое или текстовое намерение → понятное Git-изменение → проверка схемы и политик → подтверждение по уровню риска → закреплённая сборка NixOS → dry run → атомарная активация → проверка сервисов и оборудования → успех или откат`
+CLARYEL Box Core is a free and open NixOS control plane for private AI and hardware-integrated edge systems operated by households, professionals and small organisations.
 
-## Public baseline already present / Уже опубликованная основа
+Its defining control loop is deliberately safer than direct voice administration:
 
-- project governance, architecture and threat model; / управление проектом, архитектура и модель угроз;
-- exact public/private and grant boundaries; / точные публичные, приватные и грантовые границы;
-- desired-state and hardware-profile JSON Schemas; / JSON Schemas desired state и аппаратных профилей;
-- initial OPA-style risk policy; / первоначальная risk policy в стиле OPA;
-- initial Nix flake and non-destructive NixOS module; / первоначальный Nix flake и неразрушающий модуль NixOS;
-- privacy-minimised node capability service clean-exported from the private Node Agent; / минимизированный с точки зрения приватности сервис возможностей узла, чисто экспортированный из приватного Node Agent;
-- synthetic home-system example; / синтетический пример домашней системы;
-- public CI, deterministic validation and secret scanning; / публичный CI, детерминированная проверка и secret scanning;
-- grant budget, milestones and machine-readable website content; / грантовый бюджет, milestones и машиночитаемый контент сайта;
-- explicit implementation and private-testing gap register. / явный реестр реализации и приватно тестируемых пробелов.
+`local voice or text intent → constrained change plan → Git-compatible diff → schema and policy validation → risk-based approval → pinned NixOS build → dry run → atomic activation → service and hardware health checks → success or rollback`
 
-## Trust boundary / Граница доверия
+The project does not claim to invent NixOS, GitOps, self-hosting, Home Assistant or fleet management. It connects them at a boundary that remains underserved: explainable local intent, user-owned desired state, physical-world integration, bounded hardware profiles and recovery for one or a small number of owner-controlled nodes.
 
-Git-managed configuration contains technical desired state only. It never contains customer documents, private datasets, voice recordings, credentials, cryptographic keys, secret values or local RAG content. Secrets and encrypted data remain on customer-controlled infrastructure.
+## Why this fits NGI Fediversity
 
-Git-managed конфигурация содержит только техническое желаемое состояние. Она никогда не содержит клиентские документы, приватные наборы данных, голосовые записи, учётные данные, криптографические ключи, значения секретов или содержимое локального RAG. Секреты и зашифрованные данные остаются в инфраструктуре под контролем клиента.
+- **Reproducibility:** pinned NixOS generations and explicit hardware profiles.
+- **User control:** configuration is portable; secrets and content remain local.
+- **Service portability:** Git providers, remote-access providers and hardware vendors are replaceable adapters.
+- **Safe operation:** natural-language requests create reviewable proposals, never unreviewed shell actions.
+- **Open public value:** the grant-funded core remains independently usable without a CLARYEL subscription.
+- **Real-world validation:** the same open core is intended to support a commercial appliance and public reference deployment, creating a long-term maintenance incentive.
 
-## Current publication state / Текущее состояние публикации
+See [`docs/GRANT_ALIGNMENT.md`](docs/GRANT_ALIGNMENT.md), [`docs/COMPETITIVE_LANDSCAPE.md`](docs/COMPETITIVE_LANDSCAPE.md) and [`docs/APPLICATION_SUBMISSION_STATUS.md`](docs/APPLICATION_SUBMISSION_STATUS.md).
 
-| Area / Область | Public status / Публичный статус | Notes / Примечание |
+## Trust planes
+
+| Plane | Contains | Explicitly excludes |
 |---|---|---|
-| Architecture, governance and grant scope / Архитектура, управление и границы заявки | `implemented` | Public documents and machine-readable status exist. / Публичные документы и машиночитаемый статус существуют. |
-| Nix flake and baseline module / Nix flake и базовый модуль | `experimental` | Creates safe local boundaries and performs no destructive deployment action. / Создаёт безопасные локальные границы и не выполняет разрушающие deployment-действия. |
-| Node capability service / Сервис возможностей узла | `experimental` | First clean export with exact provenance; raw hostname is not exposed. / Первый чистый экспорт с точным provenance; raw hostname не раскрывается. |
-| Voice-to-GitOps runtime / Runtime Voice-to-GitOps | `planned` | Policy and schemas are public; runtime implementation is not yet public. / Политика и схемы опубликованы; runtime-реализация ещё не публична. |
-| Home Assistant adapter / Адаптер Home Assistant | `private-testing` | Generic adapter and non-destructive simulation are being separated. / Выделяются универсальный адаптер и неразрушающая симуляция. |
-| Hardware profiles / Аппаратные профили | `planned` | CPU, iGPU, GPU, NAS, x86_64, aarch64, Intel vPro/AMT, Redfish and IPMI. / CPU, iGPU, GPU, NAS, x86_64, aarch64, Intel vPro/AMT, Redfish и IPMI. |
-| Commercial support, CMDB, logistics and SLA / Коммерческая поддержка, CMDB, логистика и SLA | `outside-scope` | Remain in private commercial repositories. / Остаются в приватных коммерческих репозиториях. |
+| Public source | Open code, schemas, generic profiles, tests, documentation and release evidence | Customer-specific configuration and private topology |
+| User-owned desired state | Declarative technical configuration for one or more systems | Secret values, documents, voice recordings and RAG content |
+| Local secret | Credentials, keys and recovery material | Git history and hosted configuration services |
+| Local data | Documents, databases, object stores, vector indexes, prompts and voice data | Public repositories and support tooling |
+| Optional access | Replaceable WireGuard, Cloudflare Tunnel or other adapters | Ownership of configuration truth or customer content |
 
-See [`PUBLICATION_STATUS.md`](PUBLICATION_STATUS.md). / См. [`PUBLICATION_STATUS.md`](PUBLICATION_STATUS.md).
+## Public evidence already present
 
-## Website and ecosystem / Сайт и экосистема
+- architecture, governance, grant boundary and threat model;
+- desired-state, hardware-profile and change-plan JSON Schemas;
+- deterministic risk policy for forbidden, high-, medium-, low- and unknown-risk changes;
+- experimental Nix flake and non-destructive NixOS module;
+- privacy-minimised node capability service clean-reengineered from the private Node Agent with provenance;
+- synthetic examples that contain no customer data or secret values;
+- public CI, repository-language enforcement and full-history secret scanning;
+- budget, milestones, implementation status, clean-export inventory and confirmed submission status.
 
-- Managed Box Core site, prepared for publication: **https://boxcore.claryel.space**
-- CLARYEL Universe: **https://claryel.space/universe/**
-- CLARYEL Web Community: **https://github.com/claryel-company/claryel-web-community**
-- Commercial CLARYEL Box: **https://claryel.com**
+## Honest implementation status
 
-The managed website uses the shared CLARYEL twenty-language and twelve-view immersive runtime. Repository source, merged Pull Request, deployed site and live browser validation remain separate status states.
+| Capability | Status | Public evidence |
+|---|---|---|
+| Architecture, governance, schemas and grant boundary | `experimental` | Documents, schemas and deterministic validation; no external validation claim |
+| Nix flake and baseline NixOS module | `experimental` | Non-destructive module and flake checks |
+| Node capability service | `experimental` | Go implementation, tests and provenance record |
+| Voice-to-GitOps runtime | `planned` | Change-plan contract and risk policy; no public runtime claim |
+| Home Assistant and MQTT adapter | `private-testing` | Public boundary defined; sanitised adapter not yet released |
+| Validated hardware profiles | `planned` | Schema and validation method published; evidence pending |
+| Atomic activation, health validation and rollback controller | `planned` | Architecture and milestone contract published |
+| Commercial support, CMDB, logistics and SLA | `outside-scope` | Intentionally retained in private commercial systems |
 
-Управляемый сайт использует общий двадцатиязычный иммерсивный runtime CLARYEL из двенадцати видов. Исходник репозитория, слитый Pull Request, опубликованный сайт и live browser validation остаются отдельными статусами.
+Canonical meanings are in [`docs/STATUS_MODEL.md`](docs/STATUS_MODEL.md) and the detailed snapshot is in [`PUBLICATION_STATUS.md`](PUBLICATION_STATUS.md).
 
-## NGI Fediversity proposal / Заявка NGI Fediversity
+## Competitive position
 
-Requested support: **EUR 50,000**. No advance payment is requested. This is a requested amount, not an award. The proposal funds the public NixOS core, Voice-to-GitOps, hardware profiles, Home Assistant integration, rollback, recovery, tests and documentation. The commercial platform and adjacent products are financed separately.
+The strongest neighbouring projects solve important parts of the same landscape:
 
-Запрашиваемая поддержка: **50 000 евро**. Аванс не запрашивается. Это запрошенная, а не присуждённая сумма. Заявка финансирует публичное ядро NixOS, Voice-to-GitOps, аппаратные профили, интеграцию Home Assistant, rollback, recovery, тесты и документацию. Коммерческая платформа и смежные продукты финансируются отдельно.
+- SelfPrivacy automates the lifecycle of self-hosted services.
+- Nix Fleet targets central management of partially offline NixOS fleets.
+- NixEdgeOpt optimises placement and migration across multiple NixOS nodes.
+- End-to-end NixOS boot security strengthens trusted and verified boot.
+- Nocloud and bewCloud provide user-facing self-hosted applications.
+- Magic Nix VFS addresses efficient lazy distribution of Nix store paths.
+
+CLARYEL Box Core is differentiated by the complete auditable loop from local human intent to an approved Git change, reproducible hardware-aware activation, Home Assistant sensors and actuators, state-aware recovery and optional out-of-band management—without placing customer content in the configuration or support planes. It is designed to consume and complement neighbouring work rather than duplicate it.
+
+## Project and funding boundary
+
+The application was submitted before the deadline. Requested support: **EUR 50,000**. No advance is requested. This is a requested amount, not an award.
+
+Funded scope: public NixOS core, Voice-to-GitOps contracts and runtime, Home Assistant/MQTT integration, hardware profiles, atomic activation, health validation, rollback, backup/recovery contracts, testing, documentation and public reference evidence.
+
+Separately financed: commercial CLARYEL Box operations, customer equipment, support tickets, CMDB, warehouse/logistics, SLA workflows, adjacent CLARYEL products, general website runtime and the wider commercial security audit.
 
 - [`GRANT_SCOPE.md`](GRANT_SCOPE.md)
 - [`BUDGET.md`](BUDGET.md)
 - [`MILESTONES.md`](MILESTONES.md)
+- [`docs/DEMO_AND_EVIDENCE_PLAN.md`](docs/DEMO_AND_EVIDENCE_PLAN.md)
+- [`docs/APPLICATION_SUBMISSION_STATUS.md`](docs/APPLICATION_SUBMISSION_STATUS.md)
 
-## Commercial sustainability / Коммерческая устойчивость
+## Website
 
-The open stack remains independently usable without a subscription. CLARYEL plans to earn from qualified hardware-software appliances, installation, migration, managed stable updates, monitoring, recovery, equipment replacement, integrations and enterprise-grade support for small organisations and households.
+- Project site: **https://boxcore.claryel.space**
+- Public repository: **https://github.com/claryel-company/claryel-boxcore**
+- Ecosystem map: **https://claryel.space/universe/**
 
-Открытый стек остаётся пригодным для самостоятельного использования без подписки. CLARYEL планирует получать доход от квалифицированных аппаратно-программных комплексов, установки, миграции, управляемых стабильных обновлений, мониторинга, recovery, замены оборудования, интеграций и enterprise-поддержки для небольших организаций и домашних хозяйств.
+The managed website runtime is owned by the private `claryel-space` repository. This public repository owns versioned public facts and evidence. Repository source, merged Pull Request, deployed site and browser validation are separate delivery states.
 
-## Documentation / Документация
+## Documentation
 
 - [`ARCHITECTURE.md`](ARCHITECTURE.md)
 - [`THREAT_MODEL.md`](THREAT_MODEL.md)
@@ -85,28 +113,26 @@ The open stack remains independently usable without a subscription. CLARYEL plan
 - [`SECURITY.md`](SECURITY.md)
 - [`GOVERNANCE.md`](GOVERNANCE.md)
 - [`CONTRIBUTING.md`](CONTRIBUTING.md)
+- [`docs/QUICKSTART.md`](docs/QUICKSTART.md)
+- [`docs/COMPETITIVE_LANDSCAPE.md`](docs/COMPETITIVE_LANDSCAPE.md)
+- [`docs/GRANT_ALIGNMENT.md`](docs/GRANT_ALIGNMENT.md)
+- [`docs/DEMO_AND_EVIDENCE_PLAN.md`](docs/DEMO_AND_EVIDENCE_PLAN.md)
+- [`docs/APPLICATION_SUBMISSION_STATUS.md`](docs/APPLICATION_SUBMISSION_STATUS.md)
 - [`docs/PRIVATE_EXPORT_INVENTORY.md`](docs/PRIVATE_EXPORT_INVENTORY.md)
 - [`docs/PROVENANCE.md`](docs/PROVENANCE.md)
 - [`NEXT_STEPS.md`](NEXT_STEPS.md)
 
-## Validation / Проверка
+## Validation
 
 ```bash
-# English: Validate public files and obvious disclosure risks.
-# Русский: Проверить публичные файлы и очевидные риски раскрытия.
 python3 scripts/validate_public_baseline.py
-
-# English: Test the public node-capability service.
-# Русский: Протестировать публичный сервис возможностей узла.
-go test ./...
-
-# English: Evaluate the public Nix flake.
-# Русский: Выполнить evaluation публичного Nix flake.
+go test -race ./...
+go vet ./...
 nix flake check --no-build
 ```
 
-## Licence / Лицензия
+CI additionally validates desired-state and change-plan examples against their schemas, tests the Rego policy and scans the complete public history for secrets.
 
-Public code is currently released under Apache-2.0. Public documentation is intended for CC BY-SA 4.0 unless a file states another compatible licence. Grant negotiations may refine the licence structure without reducing the freedom of published grant-funded results.
+## Licence
 
-Публичный код в настоящее время выпускается под Apache-2.0. Публичная документация предназначена для CC BY-SA 4.0, если файл не указывает другую совместимую лицензию. Переговоры по гранту могут уточнить структуру лицензирования без ограничения свободы опубликованных результатов, профинансированных грантом.
+Public code is released under Apache-2.0. Documentation is released under CC BY-SA 4.0 unless a file states another compatible licence. See [`LICENSES/README.md`](LICENSES/README.md).

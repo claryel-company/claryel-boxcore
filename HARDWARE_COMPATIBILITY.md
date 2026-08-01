@@ -1,54 +1,81 @@
-# Hardware compatibility / Аппаратная совместимость
+# Hardware compatibility
 
-## Status model / Модель статусов
+No hardware profile is considered supported merely because a device class appears in this document. Support claims require reproducible public evidence.
 
-- `planned`: no public implementation or test evidence yet. / публичной реализации или evidence тестирования ещё нет.
-- `experimental`: public implementation exists but support is limited. / публичная реализация существует, но поддержка ограничена.
-- `validated`: tested by CLARYEL on declared hardware and release. / протестировано CLARYEL на объявленном оборудовании и релизе.
-- `community-validated`: independently reproduced by a community contributor. / независимо воспроизведено участником сообщества.
-- `commercially-qualified`: supported by the commercial CLARYEL Box service. / поддерживается коммерческим сервисом CLARYEL Box.
+## Evidence levels
 
-## Initial matrix / Первоначальная матрица
+Use the canonical implementation status from `docs/STATUS_MODEL.md`. Hardware evidence adds two independent qualifiers:
 
-| Profile / Профиль | Architecture / Архитектура | Public status / Публичный статус | Intended use / Назначение |
+- **CLARYEL-validated:** reproduced by CLARYEL on the declared model, firmware and release.
+- **Community-reproduced:** independently reproduced by a contributor with public non-sensitive evidence.
+- **Commercially qualified:** covered by a separately documented commercial support policy; this does not change the open-source implementation status.
+
+## Initial matrix
+
+| Profile | Architecture | Public status | Intended use |
 |---|---|---|---|
-| Generic CPU-only server | x86_64 | planned | Local services and small models without GPU acceleration. / Локальные сервисы и небольшие модели без GPU-ускорения. |
-| Intel integrated GPU | x86_64 | planned | Low-power local inference and media processing. / Энергоэффективный локальный inference и обработка мультимедиа. |
-| AMD integrated GPU | x86_64 | planned | Alternative integrated acceleration profile. / Альтернативный профиль интегрированного ускорения. |
-| NVIDIA discrete GPU | x86_64 | planned | Larger local models and accelerated inference. / Более крупные локальные модели и ускоренный inference. |
-| Generic ARM node | aarch64 | planned | Low-power edge, Home Assistant and control-plane roles. / Энергоэффективные edge, Home Assistant и control-plane роли. |
-| Virtual machine | x86_64/aarch64 | planned | Evaluation, development and migration. / Проверка, разработка и миграция. |
-| Compatible NAS | vendor-dependent | planned | Storage, backup or virtualised deployment. / Хранилище, backup или виртуализированное развёртывание. |
-| Intel vPro/AMT | x86_64 compatible devices | planned | Optional out-of-band inventory, power, diagnosis and recovery. / Опциональная out-of-band инвентаризация, питание, диагностика и восстановление. |
-| Redfish | compatible servers | planned | Vendor-neutral server inventory and recovery control. / Vendor-neutral инвентаризация и управление восстановлением серверов. |
-| IPMI | compatible servers | planned | Legacy out-of-band management behind strict local controls. / Legacy out-of-band управление под строгим локальным контролем. |
+| Generic CPU-only server | x86_64-linux | `planned` | Local services and small models without GPU acceleration |
+| Intel integrated GPU | x86_64-linux | `planned` | Low-power local inference and media processing |
+| AMD integrated GPU | x86_64-linux | `planned` | Alternative integrated acceleration profile |
+| NVIDIA discrete GPU | x86_64-linux | `planned` | Larger local models and accelerated inference |
+| Generic ARM node | aarch64-linux | `planned` | Low-power edge, Home Assistant and control-plane roles |
+| Virtual machine | x86_64/aarch64 | `planned` | Evaluation, development and migration |
+| Compatible NAS | vendor-dependent | `planned` | Storage, backup or virtualised deployment |
+| Intel AMT | compatible x86_64 devices | `planned` | Optional inventory, power, diagnosis and recovery outside the operating system |
+| Redfish | compatible servers | `planned` | Standards-based server inventory and recovery control |
+| IPMI | compatible servers | `planned` | Legacy out-of-band management behind strict local controls |
 
-## Required profile fields / Обязательные поля профиля
+## Required profile fields
 
-Each machine profile declares:
+Each public profile declares:
 
-Каждый профиль машины объявляет:
+- profile identifier and schema version;
+- exact architecture and required instruction sets;
+- minimum and recommended memory;
+- storage layout and mutable-data boundaries;
+- accelerator type, runtime and driver requirements;
+- TPM, secure boot and encryption capabilities;
+- network and management interfaces;
+- Home Assistant sensor and actuator capabilities;
+- out-of-band management support;
+- power and thermal observations where relevant;
+- known limitations and destructive-operation gates;
+- installation, upgrade, rollback and disaster-recovery procedure;
+- exact tested commit, release, date and evidence URL.
 
-- profile identifier and schema version; / идентификатор профиля и версию схемы;
-- CPU architecture and required instruction sets; / архитектуру CPU и необходимые наборы инструкций;
-- minimum and recommended RAM; / минимальную и рекомендуемую RAM;
-- storage layout and mutable-data boundaries; / схему хранилища и границы изменяемых данных;
-- GPU or accelerator type and driver requirements; / тип GPU или ускорителя и требования к драйверам;
-- TPM, secure boot and encryption capabilities; / возможности TPM, secure boot и шифрования;
-- network and management interfaces; / сетевые и management-интерфейсы;
-- Home Assistant sensor and actuator capabilities; / возможности датчиков и исполнительных устройств Home Assistant;
-- out-of-band management support; / поддержку out-of-band управления;
-- known limitations and destructive-operation gates; / известные ограничения и gates разрушающих операций;
-- exact tested commit, release, date and evidence. / точный протестированный commit, релиз, дату и evidence.
+Serial numbers, private management addresses, credentials, customer identifiers and private topology are prohibited from public evidence.
 
-## Intel vPro/AMT policy / Политика Intel vPro/AMT
+## Validation procedure
 
-Intel vPro/AMT is an optional capability for compatible equipment, not a dependency of Box Core. Public profiles will describe discovery, inventory, power-state and recovery capabilities without including customer credentials, management-network topology or vendor secrets. Remote actions remain disabled unless local policy explicitly enables them.
+A profile is validated only after all applicable steps pass:
 
-Intel vPro/AMT является опциональной возможностью совместимого оборудования, а не зависимостью Box Core. Публичные профили будут описывать обнаружение, инвентаризацию, управление питанием и восстановление без клиентских учётных данных, топологии management-сети или секретов поставщика. Удалённые действия остаются выключенными, пока локальная политика явно не разрешит их.
+1. firmware and BIOS assumptions are recorded;
+2. installation or rebuild is reproducible from the documented input;
+3. declared services start and health checks pass;
+4. storage and mutable-data boundaries match the profile;
+5. accelerator runtime and representative workload are tested;
+6. upgrade and rollback are exercised;
+7. backup and restore are tested separately from configuration rollback;
+8. management interfaces remain inaccessible unless explicitly enabled;
+9. privacy-minimised evidence is published.
 
-## Data safety / Безопасность данных
+## Out-of-band policy
 
-Hardware profile selection never authorises disk repartitioning, data deletion, key rotation or backup destruction. Those operations require separate explicit workflows and cannot be approved by voice alone.
+Intel AMT, Redfish and IPMI are optional adapters, not dependencies. Every remote action requires:
 
-Выбор аппаратного профиля никогда не разрешает переразметку дисков, удаление данных, ротацию ключей или уничтожение backups. Эти операции требуют отдельных явных workflows и не могут быть подтверждены только голосом.
+- a declared compatible capability;
+- isolated management networking or an equivalent protected path;
+- separate credentials stored outside Git;
+- least-privilege policy and explicit local consent;
+- an auditable request and result;
+- a tested revocation and rollback path.
+
+Power, boot and recovery actions remain disabled by default.
+
+## Data safety
+
+Hardware profile selection never authorises disk repartitioning, data deletion, key rotation, public network exposure or backup destruction. Those operations require separate explicit workflows and cannot be approved by voice alone.
+
+## Current evidence gap
+
+The repository currently publishes the schema and validation method, but no profile has public validation evidence. All matrix entries therefore remain `planned` until a profile-specific evidence record is merged.

@@ -5,27 +5,42 @@
     "id": "generic-x86-cpu",
     "architecture": "x86_64-linux",
     "memoryMiB": 16384,
+    "firmwareAssumptions": [
+      "UEFI firmware is available.",
+      "The selected storage device is dedicated to the synthetic test environment."
+    ],
     "storage": {
       "systemGiB": 64,
       "dataGiB": 512,
-      "encryptedData": true
+      "encryptedData": true,
+      "mutableDataSeparated": true
     },
     "accelerator": {
       "type": "none",
-      "memoryMiB": 0
+      "memoryMiB": 0,
+      "runtime": null
     },
     "capabilities": {
       "tpm2": true,
       "secureBoot": false,
       "homeAssistant": true,
+      "mqtt": true,
       "outOfBand": "none"
     },
     "destructiveOperations": {
       "diskRepartition": false,
       "backupDeletion": false,
-      "keyRotationByVoice": false
+      "keyRotationByVoice": false,
+      "publicExposureByVoice": false
     },
-    "status": "planned"
+    "status": "planned",
+    "validation": {
+      "reproducedBy": "none",
+      "commerciallyQualified": false
+    },
+    "knownLimitations": [
+      "This is a synthetic example, not a validated hardware profile."
+    ]
   },
   "services": [
     {

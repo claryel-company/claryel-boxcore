@@ -6,8 +6,14 @@
   "requestedAmountEUR": 50000,
   "advanceRequested": false,
   "fundingStatus": "requested-not-awarded",
-  "applicationStatus": "submission-not-verified",
+  "applicationStatus": "submitted-confirmed-by-applicant",
   "deadline": "2026-08-01T12:00:00+02:00",
+  "deadlineMet": true,
+  "submissionReceipt": {
+    "exists": true,
+    "public": false,
+    "reason": "The applicant confirmed receipt before the deadline. The receipt and any identifiers remain in the private application record unless a sanitised evidence copy is approved for publication."
+  },
   "defaultDurationMonths": 12,
   "included": [
     "public NixOS core and packaging",
@@ -45,5 +51,5 @@
     {"id": "WP6", "label": "Public deployment, CI, testing, accessibility and documentation", "amountEUR": 5400},
     {"id": "WP7", "label": "External documentation and community coordination", "amountEUR": 3200}
   ],
-  "disclaimer": "The amount is requested, not awarded. Submission receipt, final scope, milestones and any funding decision require independent evidence from NLnet."
+  "disclaimer": "The application was submitted before the deadline and a receipt exists. EUR 50,000 remains requested, not awarded. Final scope, milestones and any funding decision require independent evidence from NLnet."
 }

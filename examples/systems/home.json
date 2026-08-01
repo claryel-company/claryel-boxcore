@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "0.1",
+  "systemId": "home-main",
+  "profile": {
+    "id": "generic-x86-cpu",
+    "architecture": "x86_64-linux",
+    "memoryMiB": 16384,
+    "storage": {
+      "systemGiB": 64,
+      "dataGiB": 512,
+      "encryptedData": true
+    },
+    "accelerator": {
+      "type": "none",
+      "memoryMiB": 0
+    },
+    "capabilities": {
+      "tpm2": true,
+      "secureBoot": false,
+      "homeAssistant": true,
+      "outOfBand": "none"
+    },
+    "destructiveOperations": {
+      "diskRepartition": false,
+      "backupDeletion": false,
+      "keyRotationByVoice": false
+    },
+    "status": "planned"
+  },
+  "services": [
+    {
+      "id": "home-assistant",
+      "enabled": true,
+      "channel": "stable",
+      "resources": {
+        "memoryMiB": 2048,
+        "cpuShares": 256
+      },
+      "secretRefs": [
+        "local-secret://home-assistant/api-token"
+      ]
+    },
+    {
+      "id": "local-model-gateway",
+      "enabled": true,
+      "channel": "experimental",
+      "resources": {
+        "memoryMiB": 4096,
+        "cpuShares": 512
+      },
+      "secretRefs": []
+    }
+  ],
+  "deployment": {
+    "approvalMode": "always-human",
+    "rollbackOnFailure": true,
+    "maintenanceWindow": "02:00-04:00"
+  },
+  "remoteAccess": {
+    "enabled": false,
+    "adapter": "none"
+  },
+  "metadata": {
+    "ownerLabel": "Synthetic public example",
+    "purpose": "Demonstrate technical desired state without customer data or secret values."
+  }
+}

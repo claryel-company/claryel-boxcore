@@ -41,41 +41,71 @@ func main() {
 
 func serve(arguments []string) {
 	flags := flag.NewFlagSet("serve", flag.ExitOnError)
-	listen := flags.String("listen", "127.0.0.1:8091", "loopback listen address")
+	listen := flags.String("listen", "127.0.0.1:8091", "listen address; loopback is the safe default")
 	_ = flags.Parse(arguments)
 
+	server := &http.Server{
+		Addr:              *listen,
+		Handler:           newHandler(),
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       10 * time.Second,
+		WriteTimeout:      10 * time.Second,
+		IdleTimeout:       30 * time.Second,
+		MaxHeaderBytes:    1 << 20,
+	}
+
+	log.Printf("boxcore-node listening on %s", *listen)
+	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		log.Fatal(err)
+	}
+}
+
+func newHandler() http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/health", func(writer http.ResponseWriter, request *http.Request) {
-		writer.Header().Set("Content-Type", "application/json")
-		writer.Header().Set("Cache-Control", "no-store")
-		response := map[string]any{
+	mux.HandleFunc("/health", readOnlyJSON(func() (any, error) {
+		return map[string]any{
 			"status":  "ok",
 			"version": version,
 			"time":    time.Now().UTC().Format(time.RFC3339),
-		}
-		_ = json.NewEncoder(writer).Encode(response)
+		}, nil
+	}))
+	mux.HandleFunc("/capabilities", readOnlyJSON(func() (any, error) {
+		return discovery.Discover()
+	}))
+
+	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		writer.Header().Set("Cache-Control", "no-store")
+		writer.Header().Set("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'")
+		writer.Header().Set("Referrer-Policy", "no-referrer")
+		writer.Header().Set("X-Content-Type-Options", "nosniff")
+		writer.Header().Set("X-Frame-Options", "DENY")
+		mux.ServeHTTP(writer, request)
 	})
-	mux.HandleFunc("/capabilities", func(writer http.ResponseWriter, request *http.Request) {
-		capabilities, err := discovery.Discover()
+}
+
+func readOnlyJSON(build func() (any, error)) http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		if request.Method != http.MethodGet && request.Method != http.MethodHead {
+			writer.Header().Set("Allow", "GET, HEAD")
+			http.Error(writer, "method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+
+		payload, err := build()
 		if err != nil {
 			http.Error(writer, "capability discovery failed", http.StatusInternalServerError)
 			return
 		}
-		writer.Header().Set("Content-Type", "application/json")
-		writer.Header().Set("Cache-Control", "no-store")
-		_ = json.NewEncoder(writer).Encode(capabilities)
-	})
 
-	server := &http.Server{
-		Addr:              *listen,
-		Handler:           mux,
-		ReadHeaderTimeout: 5 * time.Second,
+		writer.Header().Set("Content-Type", "application/json; charset=utf-8")
+		if request.Method == http.MethodHead {
+			writer.WriteHeader(http.StatusOK)
+			return
+		}
+		if err := json.NewEncoder(writer).Encode(payload); err != nil {
+			log.Printf("response encoding failed: %v", err)
+		}
 	}
-
-	// English: The public baseline listens on loopback by default and performs no privileged mutation.
-	// Русский: Публичная основа по умолчанию слушает loopback и не выполняет привилегированные изменения.
-	log.Printf("boxcore-node listening on %s", *listen)
-	log.Fatal(server.ListenAndServe())
 }
 
 func fail(message string) {

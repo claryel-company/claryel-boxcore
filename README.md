@@ -2,7 +2,7 @@
 
 [![Validate public baseline](https://github.com/claryel-company/claryel-boxcore/actions/workflows/validate.yml/badge.svg)](https://github.com/claryel-company/claryel-boxcore/actions/workflows/validate.yml)
 
-> **Status:** early public baseline; not production-ready. Private experiments are never described as public implementation. The requested NGI Fediversity support is not an award.
+> **Status:** early public baseline; not production-ready. The NGI Fediversity application was submitted before the 1 August 2026 deadline and a receipt exists. EUR 50,000 remains requested, not awarded. Private experiments are never described as public implementation.
 
 <!-- CLARYEL-NAVIGATION:START -->
 ## CLARYEL project navigation
@@ -31,7 +31,7 @@ The project does not claim to invent NixOS, GitOps, self-hosting, Home Assistant
 - **Open public value:** the grant-funded core remains independently usable without a CLARYEL subscription.
 - **Real-world validation:** the same open core is intended to support a commercial appliance and public reference deployment, creating a long-term maintenance incentive.
 
-See [`docs/GRANT_ALIGNMENT.md`](docs/GRANT_ALIGNMENT.md) and [`docs/COMPETITIVE_LANDSCAPE.md`](docs/COMPETITIVE_LANDSCAPE.md).
+See [`docs/GRANT_ALIGNMENT.md`](docs/GRANT_ALIGNMENT.md), [`docs/COMPETITIVE_LANDSCAPE.md`](docs/COMPETITIVE_LANDSCAPE.md) and [`docs/APPLICATION_SUBMISSION_STATUS.md`](docs/APPLICATION_SUBMISSION_STATUS.md).
 
 ## Trust planes
 
@@ -46,19 +46,19 @@ See [`docs/GRANT_ALIGNMENT.md`](docs/GRANT_ALIGNMENT.md) and [`docs/COMPETITIVE_
 ## Public evidence already present
 
 - architecture, governance, grant boundary and threat model;
-- desired-state and hardware-profile JSON Schemas;
-- initial risk policy for forbidden, high-, medium- and low-risk changes;
+- desired-state, hardware-profile and change-plan JSON Schemas;
+- deterministic risk policy for forbidden, high-, medium-, low- and unknown-risk changes;
 - experimental Nix flake and non-destructive NixOS module;
 - privacy-minimised node capability service clean-reengineered from the private Node Agent with provenance;
 - synthetic examples that contain no customer data or secret values;
-- public CI, repository-language enforcement and secret scanning;
-- budget, milestones, implementation status and clean-export inventory.
+- public CI, repository-language enforcement and full-history secret scanning;
+- budget, milestones, implementation status, clean-export inventory and confirmed submission status.
 
 ## Honest implementation status
 
 | Capability | Status | Public evidence |
 |---|---|---|
-| Architecture, governance, schemas and grant boundary | `implemented` | Documents, schemas and deterministic validation |
+| Architecture, governance, schemas and grant boundary | `experimental` | Documents, schemas and deterministic validation; no external validation claim |
 | Nix flake and baseline NixOS module | `experimental` | Non-destructive module and flake checks |
 | Node capability service | `experimental` | Go implementation, tests and provenance record |
 | Voice-to-GitOps runtime | `planned` | Change-plan contract and risk policy; no public runtime claim |
@@ -78,12 +78,13 @@ The strongest neighbouring projects solve important parts of the same landscape:
 - NixEdgeOpt optimises placement and migration across multiple NixOS nodes.
 - End-to-end NixOS boot security strengthens trusted and verified boot.
 - Nocloud and bewCloud provide user-facing self-hosted applications.
+- Magic Nix VFS addresses efficient lazy distribution of Nix store paths.
 
 CLARYEL Box Core is differentiated by the complete auditable loop from local human intent to an approved Git change, reproducible hardware-aware activation, Home Assistant sensors and actuators, state-aware recovery and optional out-of-band management—without placing customer content in the configuration or support planes. It is designed to consume and complement neighbouring work rather than duplicate it.
 
 ## Project and funding boundary
 
-Requested support: **EUR 50,000**. No advance is requested. This is a requested amount, not an award.
+The application was submitted before the deadline. Requested support: **EUR 50,000**. No advance is requested. This is a requested amount, not an award.
 
 Funded scope: public NixOS core, Voice-to-GitOps contracts and runtime, Home Assistant/MQTT integration, hardware profiles, atomic activation, health validation, rollback, backup/recovery contracts, testing, documentation and public reference evidence.
 
@@ -93,6 +94,7 @@ Separately financed: commercial CLARYEL Box operations, customer equipment, supp
 - [`BUDGET.md`](BUDGET.md)
 - [`MILESTONES.md`](MILESTONES.md)
 - [`docs/DEMO_AND_EVIDENCE_PLAN.md`](docs/DEMO_AND_EVIDENCE_PLAN.md)
+- [`docs/APPLICATION_SUBMISSION_STATUS.md`](docs/APPLICATION_SUBMISSION_STATUS.md)
 
 ## Website
 
@@ -114,6 +116,8 @@ The managed website runtime is owned by the private `claryel-space` repository. 
 - [`docs/QUICKSTART.md`](docs/QUICKSTART.md)
 - [`docs/COMPETITIVE_LANDSCAPE.md`](docs/COMPETITIVE_LANDSCAPE.md)
 - [`docs/GRANT_ALIGNMENT.md`](docs/GRANT_ALIGNMENT.md)
+- [`docs/DEMO_AND_EVIDENCE_PLAN.md`](docs/DEMO_AND_EVIDENCE_PLAN.md)
+- [`docs/APPLICATION_SUBMISSION_STATUS.md`](docs/APPLICATION_SUBMISSION_STATUS.md)
 - [`docs/PRIVATE_EXPORT_INVENTORY.md`](docs/PRIVATE_EXPORT_INVENTORY.md)
 - [`docs/PROVENANCE.md`](docs/PROVENANCE.md)
 - [`NEXT_STEPS.md`](NEXT_STEPS.md)
@@ -122,11 +126,12 @@ The managed website runtime is owned by the private `claryel-space` repository. 
 
 ```bash
 python3 scripts/validate_public_baseline.py
-go test ./...
+go test -race ./...
+go vet ./...
 nix flake check --no-build
 ```
 
-CI additionally validates example documents against their schemas, tests the Rego policy and scans the complete public history for secrets.
+CI additionally validates desired-state and change-plan examples against their schemas, tests the Rego policy and scans the complete public history for secrets.
 
 ## Licence
 

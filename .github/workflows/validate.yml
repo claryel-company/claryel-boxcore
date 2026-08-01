@@ -46,7 +46,7 @@ jobs:
         run: >-
           nix run nixpkgs#check-jsonschema --
           --schemafile schemas/desired-state.schema.json
-          examples/home-system.json
+          examples/systems/home.json
 
       - name: Validate change-plan examples
         run: >-
@@ -56,7 +56,7 @@ jobs:
           examples/change-plan-high-risk.json
 
       - name: Test policy
-        run: nix run nixpkgs#opa -- test policies
+        run: nix run nixpkgs#opa -- test policy
 
   secret-scan:
     runs-on: ubuntu-latest

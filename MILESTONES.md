@@ -1,61 +1,57 @@
-# Proposed milestones / Предлагаемые milestones
+# Proposed milestones
 
-The final milestone structure is subject to NLnet negotiation and the Memorandum of Understanding.
+The final structure is subject to NLnet negotiation and the Memorandum of Understanding. Every milestone ends in public, independently verifiable results rather than activity-only reporting.
 
-Окончательная структура milestones определяется переговорами с NLnet и Memorandum of Understanding.
+## M1 — Architecture, trust and release baseline
 
-## M1 — Public architecture and trust model / Публичная архитектура и модель доверия
+**Deliverables:** architecture, threat model, public/private boundary, language and licence policy, desired-state and change-plan schemas, status model, CI and clean-export process.
 
-**Deliverables / Результаты:** architecture, threat model, public/private boundary, licence policy, desired-state schema and initial CI.  
-**Acceptance / Приёмка:** public documents, schema validation and clean-export checks pass.
+**Acceptance:** public documents and schemas are internally consistent; English-only, secret and provenance checks pass; requested funding is not represented as awarded.
 
-**Результаты:** архитектура, модель угроз, публичная/приватная граница, политика лицензирования, схема desired state и первоначальный CI.  
-**Приёмка:** публичные документы, проверка схем и clean-export checks проходят.
+## M2 — Reproducible NixOS baseline
 
-## M2 — Reproducible NixOS baseline / Воспроизводимая основа NixOS
+**Deliverables:** pinned flake, baseline module, service packaging and CPU-only x86_64 profile.
 
-**Deliverables / Результаты:** flake, baseline module, service packaging, x86_64 CPU profile and reproducible build evidence.  
-**Acceptance / Приёмка:** a clean machine evaluates and builds the pinned configuration.
+**Acceptance:** a clean supported system evaluates and builds the pinned configuration; generated artefacts identify the exact source revision and dependencies.
 
-**Результаты:** flake, базовый модуль, упаковка сервисов, CPU-профиль x86_64 и evidence воспроизводимой сборки.  
-**Приёмка:** чистая машина выполняет evaluation и сборку закреплённой конфигурации.
+## M3 — Voice-to-GitOps and policy
 
-## M3 — Voice-to-GitOps and policy / Voice-to-GitOps и политики
+**Deliverables:** constrained local intent contract, explainable change plan, Git-compatible diff, policy engine and approval gates.
 
-**Deliverables / Результаты:** local intent contract, explainable change plan, Git-compatible change, risk classification and approval gates.  
-**Acceptance / Приёмка:** synthetic low-, medium-, high- and forbidden-risk scenarios produce expected policy outcomes.
+**Acceptance:** synthetic low-, medium-, high-, unknown- and forbidden-risk scenarios produce the expected deterministic result; natural-language input cannot invoke arbitrary shell actions.
 
-**Результаты:** контракт локального intent, понятный план изменений, Git-совместимое изменение, классификация риска и подтверждения.  
-**Приёмка:** синтетические сценарии низкого, среднего, высокого и запрещённого риска дают ожидаемые результаты политик.
+## M4 — Home Assistant and MQTT integration
 
-## M4 — Home Assistant and physical-world integration / Home Assistant и физический мир
+**Deliverables:** local voice entry, dashboard status, sensor input, safe actuator simulation and MQTT contract.
 
-**Deliverables / Результаты:** local voice entry, dashboard status, sensor input, safe actuator example and MQTT contract.  
-**Acceptance / Приёмка:** a public demo proposes and applies an approved non-destructive configuration change.
+**Acceptance:** a public demo proposes, reviews and applies an approved non-destructive change; a hostile or ambiguous request fails closed.
 
-**Результаты:** локальный голосовой ввод, dashboard-статус, вход датчиков, безопасный пример исполнительного устройства и MQTT-контракт.  
-**Приёмка:** публичное demo предлагает и применяет подтверждённое неразрушающее изменение конфигурации.
+## M5 — Atomic activation, rollback and recovery
 
-## M5 — Atomic deployment, rollback and recovery / Атомарное развёртывание, откат и восстановление
+**Deliverables:** build, dry run, activation, service and hardware health checks, failed-deployment rollback, backup/restore contracts and recovery evidence.
 
-**Deliverables / Результаты:** dry run, activation, health checks, failed-deployment rollback and supported-service recovery contracts.  
-**Acceptance / Приёмка:** automated tests demonstrate successful activation and deterministic rollback without overwriting user data.
+**Acceptance:** automated tests demonstrate successful activation, deterministic configuration rollback and a separate mutable-data recovery procedure without overwriting user content.
 
-**Результаты:** dry run, активация, health checks, откат неуспешного deployment и контракты восстановления поддерживаемых сервисов.  
-**Приёмка:** автоматические тесты демонстрируют успешную активацию и детерминированный откат без перезаписи пользовательских данных.
+## M6 — Hardware profiles and optional out-of-band recovery
 
-## M6 — Hardware profiles and out-of-band recovery / Аппаратные профили и out-of-band recovery
+**Deliverables:** x86_64, aarch64, CPU, iGPU, discrete GPU, storage/NAS profiles and capability-gated Intel AMT, Redfish and IPMI adapters.
 
-**Deliverables / Результаты:** CPU, iGPU, discrete GPU, NAS/aarch64 experimental profiles and capability-gated Intel vPro/AMT, Redfish and IPMI interfaces.  
-**Acceptance / Приёмка:** each profile declares exact capabilities, limitations, safety gates and test evidence.
+**Acceptance:** each published profile declares exact capabilities, firmware assumptions, limitations, safety gates, tested revision and privacy-minimised evidence. Unsupported capabilities fail closed.
 
-**Результаты:** профили CPU, iGPU, дискретного GPU, экспериментальные NAS/aarch64 и интерфейсы Intel vPro/AMT, Redfish и IPMI с проверкой возможностей.  
-**Приёмка:** каждый профиль описывает точные возможности, ограничения, safety gates и evidence тестирования.
+## M7 — Public reference deployment and release
 
-## M7 — Public reference deployment and release / Публичный reference deployment и релиз
+**Deliverables:** CLARYEL-operated reference deployment, release artefacts, public compatibility matrix, operator documentation, accessibility evidence, contributor onboarding and final known-limitations register.
 
-**Deliverables / Результаты:** CLARYEL-operated reference deployment, public status, documentation, hardware matrix, website, community onboarding and final release.  
-**Acceptance / Приёмка:** public repository, release artifacts, CI evidence, website and known-limitations register are available without a subscription.
+**Acceptance:** the open core, tests, documentation and evidence are available without a subscription; source, release, deployment and browser validation states are reported separately; rollback references are documented.
 
-**Результаты:** reference deployment под управлением CLARYEL, публичный статус, документация, аппаратная матрица, сайт, подключение сообщества и финальный релиз.  
-**Приёмка:** публичный репозиторий, release artifacts, CI evidence, сайт и реестр известных ограничений доступны без подписки.
+## Cross-milestone release gates
+
+Every milestone must pass:
+
+1. licence and third-party-rights review;
+2. secret, PII and topology scanning;
+3. deterministic tests and schema validation;
+4. status and claim review;
+5. documentation and accessibility review appropriate to the deliverable;
+6. explicit rollback or correction path;
+7. public provenance for any private-to-public export.

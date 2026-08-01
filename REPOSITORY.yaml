@@ -4,45 +4,26 @@ repository: claryel-company/claryel-boxcore
 central_navigation: claryel-company/claryel-platform
 level: public-product-core
 category: open-nixos-voice-gitops-edge-platform
-role: public-open-core
-status: early-public-baseline
-production_ready: false
-visibility: public
-canonical_language: en
-website: https://boxcore.claryel.space
-website_runtime_owner: claryel-company/claryel-space
-licensing:
-  code: Apache-2.0
-  documentation: CC-BY-SA-4.0
 owns:
-  - reusable public NixOS modules and flakes
-  - public Voice-to-GitOps contracts and implementation
-  - public desired-state and change-plan schemas
-  - public deterministic policy and approval model
-  - public hardware-profile schema and validation evidence
-  - public Home Assistant and MQTT adapters
-  - public capability-gated Intel AMT Redfish and IPMI adapters
-  - public synthetic examples and tests
-  - public grant scope budget milestones status and evidence
-  - canonical English website facts consumed by the managed web runtime
+  - reusable public Box Core NixOS modules and flakes
+  - public Box Core Voice-to-GitOps contracts and implementation
+  - public Box Core desired-state and change-plan schemas
+  - public Box Core deterministic risk policy and approval model
+  - public Box Core hardware-profile schema and validation evidence
+  - public Box Core Home Assistant and MQTT reference contracts
+  - public Box Core capability-gated out-of-band reference adapters
+  - public Box Core synthetic examples and tests
+  - public Box Core grant scope budget milestones status and evidence
+  - canonical English Box Core website facts
 does_not_own:
   - customer documents private datasets prompts voice recordings or RAG content
   - secret values credentials or cryptographic keys
   - customer-specific desired state
   - commercial CLARYEL Box runtime operations
+  - production integration credentials endpoints and vendor operations
   - technical-support tickets or conversations
   - customer CMDB warehouse logistics or service lifecycle
   - commercial SLA logic
   - shared website runtime localisation deployment or Cloudflare configuration
   - private production topology
   - confidential security findings
-related_repositories:
-  - claryel-company/claryel-box
-  - claryel-company/claryel-installer
-  - claryel-company/claryel-autoinstall
-  - claryel-company/claryel-agent-fabric
-  - claryel-company/claryel-node-agent
-  - claryel-company/claryel-integrations
-  - claryel-company/claryel-web-community
-  - claryel-company/claryel-space
-  - claryel-company/claryel-platform

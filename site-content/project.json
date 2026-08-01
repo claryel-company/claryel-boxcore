@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "projectId": "boxcore",
+  "name": "CLARYEL Box Core",
+  "tagline": "Speak. Review. Deploy. Roll back.",
+  "description": "An open NixOS core for private AI and hardware-integrated edge systems, controlled through reviewable Voice-to-GitOps workflows.",
+  "website": "https://boxcore.claryel.space",
+  "repository": "https://github.com/claryel-company/claryel-boxcore",
+  "status": "public-beta-preparation",
+  "openSource": true,
+  "productionReady": false,
+  "runtimeOwner": "claryel-company/claryel-space",
+  "contentOwner": "claryel-company/claryel-boxcore",
+  "primaryCapabilities": [
+    "nixos",
+    "voice-to-gitops",
+    "private-ai",
+    "home-assistant",
+    "hardware-profiles",
+    "atomic-rollback",
+    "recovery"
+  ],
+  "trustBoundary": {
+    "configurationContainsSecrets": false,
+    "configurationContainsCustomerData": false,
+    "customerDataRemainsLocal": true,
+    "highRiskChangesRequireApproval": true
+  }
+}

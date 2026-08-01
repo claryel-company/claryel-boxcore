@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "programme": "NGI Fediversity",
+  "project": "CLARYEL Box Core",
+  "requestedAmountEur": 50000,
+  "advanceRequested": false,
+  "awardStatus": "not-awarded",
+  "applicationStatus": "preparing-submission",
+  "included": [
+    "public NixOS core",
+    "Voice-to-GitOps",
+    "configuration-secret-data separation",
+    "Home Assistant and MQTT integration",
+    "hardware profiles",
+    "Intel vPro/AMT, Redfish and IPMI capability profiles",
+    "atomic deployment and rollback",
+    "backup and recovery contracts",
+    "tests and public documentation",
+    "public reference deployment"
+  ],
+  "outside": [
+    "commercial CLARYEL Box operations",
+    "customer equipment",
+    "commercial SLA and support control plane",
+    "customer CMDB, warehouse and logistics",
+    "CLARYEL Web Community",
+    "CLARYEL Solar",
+    "CLARYEL Funding",
+    "CLARYEL ID",
+    "CLARYEL Space shared runtime",
+    "CLARYEL Universe",
+    "internal accounting automation",
+    "separate external audit of the commercial ecosystem",
+    "production robotics integrations"
+  ],
+  "disclaimer": "The amount is requested, not awarded. Final scope and milestones are subject to NLnet evaluation and negotiation."
+}

@@ -1,0 +1,52 @@
+name: Validate public baseline
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  public-baseline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # English: Run deterministic checks that require no private services or credentials.
+      # Русский: Выполнить детерминированные проверки без приватных сервисов или учётных данных.
+      - name: Validate public repository
+        run: python3 scripts/validate_public_baseline.py
+
+      # English: Test the privacy-minimised public node capability service.
+      # Русский: Протестировать минимизированный с точки зрения приватности публичный сервис возможностей узла.
+      - name: Run Go tests
+        run: go test ./...
+
+      # English: Validate the Nix flake structure without applying any configuration.
+      # Русский: Проверить структуру Nix flake без применения конфигурации.
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v16
+
+      - name: Check Nix flake
+        run: nix flake check --no-build
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out complete public history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # English: Run the open-source Gitleaks CLI without an organisation licence dependency.
+      # Русский: Запустить open-source Gitleaks CLI без зависимости от организационной лицензии.
+      - name: Run Gitleaks CLI
+        run: >-
+          docker run --rm
+          -v "$PWD:/repo"
+          ghcr.io/gitleaks/gitleaks:v8.28.0
+          detect --source=/repo --no-banner --redact --verbose

@@ -21,6 +21,11 @@ jobs:
       - name: Validate public repository
         run: python3 scripts/validate_public_baseline.py
 
+      # English: Test the privacy-minimised public node capability service.
+      # Русский: Протестировать минимизированный с точки зрения приватности публичный сервис возможностей узла.
+      - name: Run Go tests
+        run: go test ./...
+
       # English: Validate the Nix flake structure without applying any configuration.
       # Русский: Проверить структуру Nix flake без применения конфигурации.
       - name: Install Nix

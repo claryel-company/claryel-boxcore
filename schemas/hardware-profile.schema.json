@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://boxcore.claryel.space/schemas/hardware-profile.schema.json",
+  "title": "CLARYEL Box Core hardware profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "architecture", "memoryMiB", "storage", "capabilities", "status"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{1,62}$"
+    },
+    "architecture": {
+      "type": "string",
+      "enum": ["x86_64-linux", "aarch64-linux"]
+    },
+    "memoryMiB": {
+      "type": "integer",
+      "minimum": 2048
+    },
+    "storage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["systemGiB", "dataGiB", "encryptedData"],
+      "properties": {
+        "systemGiB": {
+          "type": "integer",
+          "minimum": 32
+        },
+        "dataGiB": {
+          "type": "integer",
+          "minimum": 16
+        },
+        "encryptedData": {
+          "type": "boolean"
+        }
+      }
+    },
+    "accelerator": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["none", "intel-igpu", "amd-igpu", "nvidia-gpu", "other"]
+        },
+        "memoryMiB": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tpm2", "secureBoot", "homeAssistant", "outOfBand"],
+      "properties": {
+        "tpm2": {
+          "type": "boolean"
+        },
+        "secureBoot": {
+          "type": "boolean"
+        },
+        "homeAssistant": {
+          "type": "boolean"
+        },
+        "outOfBand": {
+          "type": "string",
+          "enum": ["none", "intel-amt", "redfish", "ipmi"]
+        }
+      }
+    },
+    "destructiveOperations": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "diskRepartition": {
+          "const": false
+        },
+        "backupDeletion": {
+          "const": false
+        },
+        "keyRotationByVoice": {
+          "const": false
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["planned", "experimental", "validated", "community-validated", "commercially-qualified"]
+    },
+    "tested": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "release": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "evidenceUrl": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    }
+  }
+}

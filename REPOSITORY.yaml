@@ -5,31 +5,35 @@ central_navigation: claryel-company/claryel-platform
 level: public-product-core
 category: open-nixos-voice-gitops-edge-platform
 role: public-open-core
-status: bootstrap
+status: early-public-baseline
 production_ready: false
 visibility: public
+canonical_language: en
 website: https://boxcore.claryel.space
+website_runtime_owner: claryel-company/claryel-space
 licensing:
   code: Apache-2.0
   documentation: CC-BY-SA-4.0
 owns:
-  - public NixOS modules and flakes
+  - reusable public NixOS modules and flakes
   - public Voice-to-GitOps contracts and implementation
-  - public configuration schemas
-  - public policy and approval model
-  - public hardware-profile schema and validated profiles
+  - public desired-state and change-plan schemas
+  - public deterministic policy and approval model
+  - public hardware-profile schema and validation evidence
   - public Home Assistant and MQTT adapters
-  - public Intel vPro AMT Redfish and IPMI capability profiles
-  - public bootstrap examples
-  - public grant scope budget milestones and status
-  - public website content contract
+  - public capability-gated Intel AMT Redfish and IPMI adapters
+  - public synthetic examples and tests
+  - public grant scope budget milestones status and evidence
+  - canonical English website facts consumed by the managed web runtime
 does_not_own:
-  - customer documents or private datasets
-  - secrets credentials or cryptographic keys
+  - customer documents private datasets prompts voice recordings or RAG content
+  - secret values credentials or cryptographic keys
+  - customer-specific desired state
   - commercial CLARYEL Box runtime operations
   - technical-support tickets or conversations
   - customer CMDB warehouse logistics or service lifecycle
   - commercial SLA logic
+  - shared website runtime localisation deployment or Cloudflare configuration
   - private production topology
   - confidential security findings
 related_repositories:

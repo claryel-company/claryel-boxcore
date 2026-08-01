@@ -56,7 +56,7 @@ jobs:
           examples/change-plan-high-risk.json
 
       - name: Test policy
-        run: nix run nixpkgs#opa -- test policy
+        run: nix run nixpkgs#open-policy-agent -- test policy
 
   secret-scan:
     runs-on: ubuntu-latest

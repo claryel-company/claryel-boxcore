@@ -1,6 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://boxcore.claryel.space/schemas/desired-state.schema.json",
+  "$id": "desired-state.schema.json",
+  "x-canonical-uri": "https://boxcore.claryel.space/schemas/desired-state.schema.json",
   "title": "CLARYEL Box Core desired state",
   "description": "Technical desired state only. Customer data, secret values and credentials are forbidden.",
   "type": "object",

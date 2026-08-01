@@ -42,9 +42,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      # English: Scan the public history for accidentally committed secrets.
-      # Русский: Проверить публичную историю на случайно добавленные секреты.
-      - name: Run Gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # English: Run the open-source Gitleaks CLI without an organisation licence dependency.
+      # Русский: Запустить open-source Gitleaks CLI без зависимости от организационной лицензии.
+      - name: Run Gitleaks CLI
+        run: >-
+          docker run --rm
+          -v "$PWD:/repo"
+          ghcr.io/gitleaks/gitleaks:v8.28.0
+          detect --source=/repo --no-banner --redact --verbose

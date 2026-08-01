@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "0.1",
+  "planId": "plan-enable-metrics",
+  "createdAt": "2026-08-01T10:00:00Z",
+  "request": {
+    "channel": "voice",
+    "intent": "Enable local system metrics for the dashboard.",
+    "locale": "en-GB",
+    "synthetic": true
+  },
+  "system": {
+    "systemId": "home-main",
+    "approvalMode": "automatic-low-risk",
+    "declaredCapabilities": [
+      "system.health",
+      "system.metrics.local"
+    ]
+  },
+  "baseRevision": "1111111111111111111111111111111111111111",
+  "proposedRevision": null,
+  "summary": "Enable local metrics without exposing a network endpoint or changing customer data.",
+  "changes": [
+    {
+      "path": "/services/metrics/enabled",
+      "action": "enable-metrics",
+      "before": false,
+      "after": true,
+      "containsSecretValue": false,
+      "containsCustomerData": false,
+      "requiredCapability": "system.metrics.local"
+    }
+  ],
+  "preconditions": [
+    {
+      "id": "desired-state-clean",
+      "description": "The desired-state checkout has no uncommitted changes.",
+      "required": true
+    }
+  ],
+  "validation": [
+    {
+      "id": "metrics-loopback-only",
+      "description": "The metrics endpoint remains bound to loopback and is not publicly exposed.",
+      "required": true
+    },
+    {
+      "id": "service-health",
+      "description": "The metrics service reports healthy after activation.",
+      "required": true
+    }
+  ],
+  "rollback": {
+    "generation": "nixos-generation-40",
+    "automaticOnHealthFailure": true,
+    "mutableStateRecoveryRequired": false,
+    "recoveryContract": null
+  },
+  "approval": {
+    "humanApproved": false,
+    "approvedBy": null,
+    "approvedAt": null
+  }
+}

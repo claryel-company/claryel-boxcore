@@ -1,62 +1,74 @@
-# Open-source scope and export policy / Область открытого кода и политика экспорта
+# Open-source scope and clean-export policy
 
-## Public by default / Открыто по умолчанию
+## Public after review
 
-The following categories are intended for publication after review:
+The following categories are intended for publication when they pass the release gates:
 
-Следующие категории предназначены для публикации после проверки:
+- Nix flakes and generic NixOS modules;
+- desired-state, change-plan, evidence and hardware-profile schemas;
+- Voice-to-GitOps contracts and generic implementation;
+- deterministic policy rules and approval model;
+- generic Home Assistant and MQTT adapters;
+- capability-gated Intel AMT, Redfish and IPMI adapters;
+- synthetic bootstrap examples and test fixtures;
+- tests, CI, documentation, threat model and public evidence;
+- grant scope, budget, milestones and implementation status.
 
-- Nix flakes and generic NixOS modules; / Nix flakes и универсальные модули NixOS;
-- desired-state and hardware-profile schemas; / схемы desired state и аппаратных профилей;
-- Voice-to-GitOps contracts and generic implementation; / контракты Voice-to-GitOps и универсальная реализация;
-- policy rules and approval model; / правила политик и модель подтверждения;
-- generic Home Assistant and MQTT adapters; / универсальные адаптеры Home Assistant и MQTT;
-- capability-gated Intel vPro/AMT, Redfish and IPMI profiles; / профили Intel vPro/AMT, Redfish и IPMI с проверкой возможностей;
-- bootstrap examples and synthetic fixtures; / bootstrap-примеры и синтетические fixtures;
-- tests, CI, documentation, threat model and public evidence; / тесты, CI, документация, модель угроз и публичные evidence;
-- grant scope, budget, milestones and status. / границы заявки, бюджет, milestones и статус.
-
-## Private by necessity / Закрыто по необходимости
+## Private by necessity
 
 The following categories remain private:
 
-Следующие категории остаются закрытыми:
+- customer documents, databases, vector stores, prompts and voice recordings;
+- credentials, keys, recovery material and secret values;
+- customer-specific desired state and private repository metadata;
+- production topology, addressing, VPN details and account identifiers;
+- support tickets, conversations, CMDB, warehouse and logistics data;
+- commercial SLA workflows and equipment-replacement operations;
+- unresolved vulnerabilities and confidential audit findings;
+- third-party material without compatible publication rights.
 
-- customer documents, databases, vector stores and voice recordings; / клиентские документы, базы данных, vector stores и голосовые записи;
-- credentials, keys, recovery material and secret values; / учётные данные, ключи, материалы восстановления и значения секретов;
-- customer-specific desired state and private repository metadata; / клиентское desired state и metadata приватных репозиториев;
-- production topology, IP addressing, VPN configuration and account identifiers; / production-топология, IP-адресация, VPN-конфигурация и идентификаторы аккаунтов;
-- support tickets, conversations, CMDB, warehouse and logistics data; / тикеты, переписка, CMDB, складские и логистические данные;
-- commercial SLA workflows and equipment-replacement operations; / коммерческие SLA-процессы и операции замены оборудования;
-- unresolved vulnerabilities and confidential audit findings; / неисправленные уязвимости и конфиденциальные результаты аудита;
-- third-party material without compatible publication rights. / материалы третьих лиц без совместимых прав публикации.
+## Clean-export rule
 
-## Clean-export rule / Правило чистого экспорта
+Private Git history is never copied. A candidate component enters a clean public branch only after:
 
-Private Git history is never copied. A candidate file is exported into a clean public branch only after:
+1. functional-owner approval;
+2. secret and credential scanning;
+3. personal-data, customer-data and private-topology review;
+4. licence and third-party-rights review;
+5. dependency and SBOM review;
+6. removal of internal names, identifiers and environment-specific paths;
+7. replacement of real data with synthetic fixtures;
+8. public tests and documentation;
+9. provenance recording of the exact reviewed private source commit, destination and exclusions;
+10. human approval of the public diff.
 
-Приватная Git-история никогда не копируется. Файл-кандидат экспортируется в чистую публичную ветку только после:
+A private source commit proves provenance, not public implementation. Public implementation exists only after the reviewed code and tests are merged here.
 
-1. functional-owner approval; / подтверждения владельца функции;
-2. secret and credential scan; / проверки секретов и учётных данных;
-3. personal-data and private-topology review; / проверки персональных данных и приватной топологии;
-4. licence and third-party rights review; / проверки лицензий и прав третьих лиц;
-5. dependency and SBOM review; / проверки зависимостей и SBOM;
-6. removal of internal names and environment-specific paths; / удаления внутренних имён и environment-специфичных путей;
-7. public tests and documentation; / публичных тестов и документации;
-8. provenance record containing the private source commit without publishing inaccessible source content. / записи происхождения с исходным приватным commit без публикации закрытого содержимого.
+## Public repository language
 
-## Publication status vocabulary / Словарь статусов публикации
+Public repository source, documentation, issues, release notes and comments are English-only. This rule keeps the public development surface internationally reviewable and prevents translation drift in security-critical source.
 
-- `implemented`: public code and tests exist. / публичный код и тесты существуют.
-- `experimental`: public implementation exists but is not production-ready. / публичная реализация существует, но не готова к production.
-- `planned`: public implementation does not yet exist. / публичная реализация ещё не существует.
-- `private-testing`: implementation exists privately and is still being reviewed or tested. / реализация существует приватно и ещё проверяется или тестируется.
-- `withheld-security`: publication is delayed for a concrete security reason. / публикация отложена по конкретной причине безопасности.
-- `outside-scope`: the capability is commercial, customer-specific or owned elsewhere. / функция является коммерческой, клиентской или принадлежит другому компоненту.
+User-facing website translations may be produced in the separately governed managed-web localisation repository. They do not change the language of this public source repository.
 
-## Licence model / Модель лицензирования
+## Status vocabulary
 
-Public code is initially released under Apache-2.0. Public documentation is released under CC BY-SA 4.0 unless a file states another compatible licence. The licence model may be refined during grant negotiations without reducing the freedom of already published grant-funded results.
+Canonical status definitions are in `docs/STATUS_MODEL.md`. Do not invent local synonyms such as `in-progress`, `ready`, `complete` or `beta` for implementation evidence.
 
-Публичный код первоначально выпускается под Apache-2.0. Публичная документация выпускается под CC BY-SA 4.0, если файл не указывает другую совместимую лицензию. Модель лицензирования может быть уточнена во время переговоров по гранту без ограничения свободы уже опубликованных результатов, профинансированных грантом.
+## Licence model
+
+Public code is released under Apache-2.0. Public documentation is released under CC BY-SA 4.0 unless a file states another compatible licence. See `LICENSES/README.md`.
+
+A later licence refinement may improve compatibility, but it may not remove freedoms from already published grant-funded results.
+
+## Export refusal conditions
+
+A component is not exported when:
+
+- it cannot be separated from customer or confidential data;
+- publication would expose an unresolved security weakness;
+- CLARYEL does not own or cannot relicense the required rights;
+- the public result would be a misleading stub without independent utility;
+- the capability belongs to another repository owner;
+- validation cannot be reproduced without private infrastructure.
+
+The refusal reason is recorded as `withheld-security`, `outside-scope` or an explicit known limitation without publishing the sensitive detail.

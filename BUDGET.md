@@ -1,35 +1,47 @@
-# Proposed budget / Предлагаемый бюджет
+# Proposed budget
 
-**Requested amount / Запрашиваемая сумма: EUR 50,000**  
-**Advance payment / Аванс: not requested / не запрашивается**
+**Requested amount: EUR 50,000**  
+**Advance payment: not requested**  
+**Award status: requested, not awarded**
 
-| Work package / Пакет работ | Amount / Сумма |
-|---|---:|
-| Architecture, threat model and trust-boundary design / Архитектура, threat model и границы доверия | EUR 3,600 |
-| NixOS modules, packaging and baseline hardware profiles / Модули NixOS, упаковка и базовые аппаратные профили | EUR 12,600 |
-| Voice-to-GitOps, Home Assistant and policy workflow / Voice-to-GitOps, Home Assistant и workflow политик | EUR 10,800 |
-| Secret isolation, encryption integration, rollback, backup and recovery / Изоляция секретов, интеграция шифрования, rollback, backup и recovery | EUR 8,100 |
-| Hardware matrix, GPU/NAS and out-of-band profiles / Аппаратная матрица, GPU/NAS и out-of-band профили | EUR 6,300 |
-| Public reference deployment, documentation and testing / Публичный reference deployment, документация и тестирование | EUR 5,400 |
-| External open-source documentation and community coordination / Внешняя координация документации и сообщества | EUR 3,200 |
-| **Total / Итого** | **EUR 50,000** |
+| Work package | Effort | Amount | Public outcome |
+|---|---:|---:|---|
+| Architecture, threat model and trust boundaries | 8 technical days | EUR 3,600 | Architecture, threat model, schemas, governance and release policy |
+| NixOS modules, packaging and baseline profiles | 28 technical days | EUR 12,600 | Reproducible flake, modules, service packaging and CPU-only x86_64 baseline |
+| Voice-to-GitOps, policy and Home Assistant/MQTT | 24 technical days | EUR 10,800 | Constrained intent contract, explainable plan, policy engine, approvals and local interface |
+| Secret isolation, rollback, backup and recovery | 18 technical days | EUR 8,100 | Secret references, atomic activation, health validation and separate mutable-state recovery |
+| Hardware matrix and out-of-band profiles | 14 technical days | EUR 6,300 | x86_64, aarch64, CPU, iGPU, GPU, NAS and capability-gated AMT/Redfish/IPMI profiles |
+| Public deployment, CI, testing, accessibility and documentation | 12 technical days | EUR 5,400 | Reference deployment, release evidence, operator docs, accessibility and community tests |
+| External documentation and community coordination | 64 hours | EUR 3,200 | Contributor onboarding, issue triage, public testing and release communication |
+| **Total** |  | **EUR 50,000** | |
 
-## Cost assumptions / Предпосылки стоимости
+## Rate basis
 
-The technical labour basis is an eight-hour day at EUR 450, equivalent to EUR 56.25 per hour. The rate represents cost recovery including applicable mandatory social and tax costs, not a commercial consulting margin.
+Technical work uses EUR 450 per eight-hour day, equivalent to EUR 56.25 per hour. The rate represents project labour cost including applicable mandatory tax and social costs, not a commercial consulting margin.
 
-Основа технической работы — восьмичасовой день по 450 евро, эквивалентно 56,25 евро в час. Ставка представляет покрытие затрат, включая применимые обязательные социальные и налоговые расходы, а не коммерческую консультационную маржу.
+External documentation and community coordination uses EUR 50 per hour and is limited to CLARYEL Box Core deliverables.
 
-No customer hardware, ordinary workstation, VAT, advertising campaign, commercial SLA operation or general overhead is charged to this proposal.
+## Excluded costs
 
-Оборудование клиентов, обычная рабочая станция, НДС, рекламная кампания, коммерческая SLA-эксплуатация и общие накладные расходы в заявку не включаются.
+The proposal does not charge:
 
-CLARYEL already has the technical infrastructure required to begin the project, financed through company resources, the first private investor and the separately awarded Nuova Impresa 2026 contribution. There is no double funding.
+- customer equipment or ordinary workstations;
+- VAT, advertising or general overhead;
+- commercial appliance development;
+- support tickets, SLA operations, CMDB, warehouse or logistics;
+- adjacent CLARYEL products or the shared website platform;
+- the separate external audit of the wider commercial ecosystem.
 
-CLARYEL уже располагает технической инфраструктурой для начала проекта, профинансированной средствами компании, первого частного инвестора и отдельно присуждённого гранта Nuova Impresa 2026. Двойного финансирования нет.
+## Other funding and non-overlap
 
-## Negotiation position / Позиция на переговорах
+CLARYEL has company resources, EUR 10,000 of private investment and a separate EUR 10,000 Nuova Impresa 2026 contribution. Those resources support incorporation, prototypes, equipment and general infrastructure. They do not finance the proposed public NixOS modules, Voice-to-GitOps runtime, public hardware profiles, grant-specific tests, documentation or reference-deployment evidence.
 
-CLARYEL requests the call maximum because the proposal combines reproducible NixOS infrastructure, local Voice-to-GitOps, hardware-aware deployment, physical-world integration and public evidence. The company is prepared to refine tasks, milestones and amount with NLnet to reach the most cost-effective plan.
+Deliverables, time records, commits and payment evidence will be separated to prevent double funding.
 
-CLARYEL запрашивает максимальную сумму конкурса, поскольку проект объединяет воспроизводимую инфраструктуру NixOS, локальный Voice-to-GitOps, аппаратно-ориентированное развёртывание, интеграцию с физическим миром и публичные evidence. Компания готова уточнить задачи, milestones и сумму совместно с NLnet для достижения наиболее рационального плана.
+## Value for money
+
+The work packages reuse already purchased infrastructure and existing private experiments while paying only for public engineering, sanitisation, validation, documentation and independently useful results. The commercial appliance creates a direct maintenance incentive because the same open core reduces CLARYEL's support and recovery costs.
+
+## Negotiation position
+
+CLARYEL requests the call maximum because the proposal combines reproducible NixOS infrastructure, safe local intent, hardware-aware deployment, physical-world integration and public evidence. The company is prepared to refine tasks, milestones and amount with NLnet to reach the most cost-effective plan.

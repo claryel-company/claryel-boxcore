@@ -1,11 +1,11 @@
 # NGI Fediversity alignment
 
-**Proposal:** CLARYEL Box Core: Voice-to-GitOps NixOS for Private AI and Hardware-Integrated Edge Systems  
-**Requested support:** EUR 50,000  
+**Proposal:** CLARYEL Box Core: Voice-to-GitOps NixOS for Private AI and Hardware-Integrated Edge Systems
+**Requested support:** EUR 50,000
 **Funding state:** requested, not awarded
 
-Official programme page: https://nlnet.nl/fediversity/  
-Applicant guide: https://nlnet.nl/fediversity/guideforapplicants/  
+Official programme page: https://nlnet.nl/fediversity/
+Applicant guide: https://nlnet.nl/fediversity/guideforapplicants/
 Eligibility: https://nlnet.nl/fediversity/eligibility/
 
 ## Programme fit

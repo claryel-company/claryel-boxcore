@@ -1,6 +1,6 @@
 # Dual-view reference implementation
 
-Status: architectural reference  
+Status: architectural reference
 Date: 2026-08-01
 
 CLARYEL Box Core is the native interaction reference for the CLARYEL website dual-view standard.

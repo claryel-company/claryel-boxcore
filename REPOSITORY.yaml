@@ -1,6 +1,7 @@
 schema_version: 1
 project: CLARYEL
 repository: claryel-company/claryel-boxcore
+visibility: public
 central_navigation: claryel-company/claryel-platform
 level: public-product-core
 category: open-nixos-voice-gitops-edge-platform

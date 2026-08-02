@@ -1,64 +1,49 @@
 # Next steps
 
-## Current request
+## Current documentation migration
 
-- **Date:** 2026-08-01
-- **Owner:** CLARYEL architecture owner
-- **Working branch:** `grant-readiness-english-only-2026-08-01`
-- **Scope:** review the public repository and project site against the NGI Fediversity proposal; remove Russian from public source; strengthen documentation, security, status and evidence; publish competitor differentiation; add a classic 2D grant view through the managed website repository.
+- Date: `2026-08-02`
+- Owner: CLARYEL Box Core Repository Maintainer
+- Architecture authority: `claryel-company/claryel-platform` ADR-0034
+- Scope: remove non-English durable documentation, apply the active-only boundary, update role instructions and enforce language and Markdown validation.
 
-## Completed on this branch
+Completed on this branch:
 
-- Replaced bilingual public source and core documentation with English-only canonical text.
-- Published a stricter trust-plane architecture, deployment state machine and mutable-data recovery boundary.
-- Normalised capability, delivery and funding status reporting.
-- Updated the Nix input to NixOS 26.05 and packaged the read-only node probe.
-- Replaced the hostname-derived node identifier with a process-ephemeral identifier.
-- Hardened the local HTTP service with method restrictions, timeouts, security headers and tests.
-- Strengthened CI with Go race tests, vet, schema validation, Rego tests, Nix evaluation and full-history secret scanning.
-- Added grant-alignment, competitive-landscape, status, language, quick-start, evidence and FAQ documentation.
-- Added a versioned change-plan schema, synthetic examples and policy tests.
+- added a repository-local documentation-language validator and Pull Request gate;
+- made English the only durable language for project documentation, user instructions, agent guidance and explanatory comments;
+- documented that English-then-Russian command comments are transient direct-interaction output and must not be committed;
+- updated `AGENTS.md` for ADR-0032, ADR-0034 and active-only navigation;
+- updated `USER_GUIDES/README.md` for Documentation Owner, Repository Maintainer, Security and Compliance Operator, Product and Business Operator, External Contributor and End User roles;
+- kept managed product localisation outside authoritative technical documentation;
+- left archived repositories outside analysis and migration.
 
-## Parallel cross-repository work
+Acceptance evidence required before merge:
 
-### `claryel-company/claryel-platform`
+1. documentation-language and Markdown-structure workflow passes;
+2. public baseline validation passes;
+3. no Russian or other non-English prose remains in canonical documentation;
+4. public status, security and repository ownership statements remain consistent;
+5. the Pull Request records final checks and rollback.
 
-Required:
+## Public baseline completed previously
 
-1. Accept an ADR that supersedes bilingual source for public repositories while preserving bilingual private/internal working documentation.
-2. Register `claryel-boxcore` as the authoritative public open-core owner.
-3. Update the central architecture, generated repository views and repository acceptance evidence.
-
-Acceptance:
-
-- central governance checks pass;
-- Box Core ownership does not duplicate `claryel-box`, Installer, Integrations or Node Agent;
-- public-source English policy and multilingual website ownership are explicit.
-
-### `claryel-company/claryel-space`
-
-Required:
-
-1. Add an accessible 2D/classic grant brief without removing the twelve-view immersive presentation.
-2. Publish comparison, scope, status, workplan and evidence links from canonical Box Core facts.
-3. Keep all twenty user-facing website locales, including Russian, under the managed-web localisation contract.
-4. Validate deterministic checks, browser workflows, Worker dry run, deployment and exact-domain audit.
-
-Acceptance:
-
-- the view selector works by pointer, touch and keyboard;
-- `?view=classic` is restorable and essential content does not depend on WebGL or animation;
-- requested funding is clearly marked as not awarded;
-- source, deployment and browser evidence are reported separately.
+- English-only canonical public source and core documentation established.
+- Trust-plane architecture, deployment state machine and mutable-data recovery boundary published.
+- Capability, delivery and funding status reporting normalised.
+- Nix input updated to NixOS 26.05 and the read-only node probe packaged.
+- Hostname-derived node identifier replaced with a process-ephemeral identifier.
+- Local HTTP service hardened with method restrictions, timeouts, security headers and tests.
+- CI strengthened with Go race tests, vet, schema validation, Rego tests, Nix evaluation and full-history secret scanning.
+- Grant alignment, competitive landscape, status, quick-start, evidence and FAQ documentation added.
+- Versioned change-plan schema, synthetic examples and policy tests added.
 
 ## Ordered implementation backlog
 
 ### P0 — merge and release hygiene
 
-- [ ] Open the focused Pull Request for this branch.
-- [ ] Resolve every deterministic, Go, Nix, schema, policy and secret-scanning failure.
-- [ ] Obtain maintainer review and merge through the protected branch.
-- [ ] Record the final commit, workflow runs and rollback reference in this file.
+- [ ] Merge the English-only documentation migration through the protected branch.
+- [ ] Record the final commit, workflow runs and rollback reference.
+- [ ] Resolve every deterministic, Go, Nix, schema, policy and secret-scanning failure before release.
 - [ ] Tag no production-ready release until the documented threshold is met.
 
 ### P1 — runnable Voice-to-GitOps core
@@ -82,7 +67,7 @@ Acceptance: injected deployment failure restores the prior generation, while a s
 ### P3 — physical-world integration
 
 - [ ] Publish a generic Home Assistant adapter and local Assist entry point.
-- [ ] Publish the MQTT contract and a synthetic sensor/actuator simulator.
+- [ ] Publish the MQTT contract and a synthetic sensor or actuator simulator.
 - [ ] Ensure actuator actions use allowlists, capability gates and explicit approval.
 
 Acceptance: a non-destructive public demo succeeds, and hostile or ambiguous requests fail closed.
@@ -91,14 +76,14 @@ Acceptance: a non-destructive public demo succeeds, and hostile or ambiguous req
 
 - [ ] Validate a CPU-only x86_64 profile.
 - [ ] Validate one integrated-GPU profile and one discrete-GPU profile.
-- [ ] Publish aarch64 and storage/NAS experimental profiles.
+- [ ] Publish aarch64 and storage or NAS experimental profiles.
 - [ ] Implement disabled-by-default Intel AMT, Redfish and IPMI simulators before real hardware control.
 
 Acceptance: every claim links to an exact commit, release, firmware assumptions, test date, privacy-minimised evidence and rollback procedure.
 
 ### P5 — community and upstream work
 
-- [ ] Open discussions with NixOS/nixpkgs, Home Assistant, MQTT and relevant Fediversity projects before duplicating reusable work.
+- [ ] Open discussions with NixOS or nixpkgs, Home Assistant, MQTT and relevant Fediversity projects before duplicating reusable work.
 - [ ] Publish contribution templates for hardware evidence, change-plan fixtures and security review.
 - [ ] Record upstream issues and patches where ownership belongs upstream.
 
@@ -109,8 +94,8 @@ Acceptance: every claim links to an exact commit, release, firmware assumptions,
 - Atomic activation, health validation and recovery remain planned.
 - The Home Assistant adapter remains in private testing.
 - No production-ready release is claimed.
-- The NGI Fediversity support is requested, not awarded.
+- NGI Fediversity support is requested, not awarded.
 
 ## Rollback
 
-Before merge, rollback means closing the Pull Request and retaining `main`. After merge, revert the exact merge commit through a focused Pull Request, rerun the complete validation ladder and update status/evidence records. No customer data or migrations are affected by the current repository-only revision.
+Before merge, close the Pull Request and retain `main`. After merge, revert the exact merge commit through a focused Pull Request, rerun the complete validation ladder and update status and evidence records. Do not restore bilingual durable documentation or analyse archived repositories.

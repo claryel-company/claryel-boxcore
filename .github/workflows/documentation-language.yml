@@ -1,0 +1,46 @@
+name: Documentation language
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  documentation-language:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - name: Select migration mode
+        id: mode
+        shell: bash
+        run: |
+          mode="check"
+          if [[ "${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}" == "agent/english-only-documentation" ]]; then
+            mode="fix"
+          fi
+          echo "value=$mode" >> "$GITHUB_OUTPUT"
+
+      - name: Normalize or validate documentation language
+        uses: claryel-company/claryel-platform/.github/actions/documentation-language@main
+        with:
+          mode: ${{ steps.mode.outputs.value }}
+
+      - name: Commit migration repairs
+        if: steps.mode.outputs.value == 'fix'
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Normalize documentation to English only"
+          git pull --rebase origin "${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
+          git push origin "HEAD:${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"

@@ -42,7 +42,7 @@ SelfPrivacy-style service definitions could become packaged Box Core services. B
 
 ### NixOS Agent-Based Deployment Stack / nix-fleet
 
-Official page: https://nlnet.nl/project/Agent-based-deployment/  
+Official page: https://nlnet.nl/project/Agent-based-deployment/
 Source: https://github.com/numtide/nix-fleet
 
 **What it owns well**

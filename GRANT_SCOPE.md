@@ -2,10 +2,10 @@
 
 ## Proposal
 
-**Project:** CLARYEL Box Core: Voice-to-GitOps NixOS for Private AI and Hardware-Integrated Edge Systems  
-**Requested amount:** EUR 50,000  
-**Advance requested:** No  
-**Award status:** requested, not awarded  
+**Project:** CLARYEL Box Core: Voice-to-GitOps NixOS for Private AI and Hardware-Integrated Edge Systems
+**Requested amount:** EUR 50,000
+**Advance requested:** No
+**Award status:** requested, not awarded
 **Default project duration:** up to 12 months, subject to the final MoU
 
 ## Included in the proposal

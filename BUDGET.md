@@ -1,7 +1,7 @@
 # Proposed budget
 
-**Requested amount: EUR 50,000**  
-**Advance payment: not requested**  
+**Requested amount: EUR 50,000**
+**Advance payment: not requested**
 **Award status: requested, not awarded**
 
 | Work package | Effort | Amount | Public outcome |

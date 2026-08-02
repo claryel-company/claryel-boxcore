@@ -1,6 +1,6 @@
 # Private-to-public export inventory
 
-**Snapshot:** 2026-08-01  
+**Snapshot:** 2026-08-01
 **Rule:** clean file-level export or independent public re-engineering only; private Git history is never copied.
 
 This inventory records candidate capability boundaries, not permission to publish. Every actual export requires a record in `PROVENANCE.md` with the exact reviewed source commit, licence decision, sanitisation and tests.

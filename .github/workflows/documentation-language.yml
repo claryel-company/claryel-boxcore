@@ -27,9 +27,8 @@ jobs:
           echo "value=$mode" >> "$GITHUB_OUTPUT"
 
       - name: Normalize or validate documentation language
-        uses: claryel-company/claryel-platform/.github/actions/documentation-language@main
-        with:
-          mode: ${{ steps.mode.outputs.value }}
+        shell: bash
+        run: python3 tools/documentation_language.py "${{ steps.mode.outputs.value }}"
 
       - name: Commit migration repairs
         if: steps.mode.outputs.value == 'fix'

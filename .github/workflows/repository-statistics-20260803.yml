@@ -1,0 +1,148 @@
+name: Repository statistics 2026-08-03
+
+on:
+  workflow_call:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  statistics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository main state
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 0
+
+      - name: Install cloc
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes cloc
+
+      - name: Calculate repository statistics
+        shell: bash
+        run: |
+          set -euo pipefail
+          git ls-files > tracked-files.txt
+          cloc --json --by-file --list-file=tracked-files.txt > cloc.json
+          python3 - <<'PY'
+          import collections
+          import datetime
+          import json
+          import os
+          import pathlib
+          import subprocess
+
+          repo = os.environ['GITHUB_REPOSITORY']
+          files = [line.rstrip('\n') for line in open('tracked-files.txt', encoding='utf-8') if line.rstrip('\n')]
+          with open('cloc.json', encoding='utf-8') as handle:
+              raw = json.load(handle)
+
+          per_language = collections.defaultdict(lambda: {'files': 0, 'blank': 0, 'comment': 0, 'code': 0})
+          counted_files = 0
+          for path, values in raw.items():
+              if path in {'header', 'SUM'} or not isinstance(values, dict) or 'language' not in values:
+                  continue
+              counted_files += 1
+              language = values['language']
+              item = per_language[language]
+              item['files'] += 1
+              item['blank'] += int(values.get('blank', 0))
+              item['comment'] += int(values.get('comment', 0))
+              item['code'] += int(values.get('code', 0))
+
+          document_extensions = {'.md', '.markdown', '.mdown', '.mkd', '.rst', '.adoc', '.asciidoc', '.txt', '.org', '.tex'}
+          document_names = {'readme', 'license', 'licence', 'authors', 'contributors', 'changelog', 'changes', 'notice', 'copying'}
+          documentation_files = []
+          documentation_lines = 0
+          tracked_bytes = 0
+          for name in files:
+              path = pathlib.Path(name)
+              try:
+                  tracked_bytes += path.stat().st_size
+              except OSError:
+                  continue
+              lower_parts = [part.lower() for part in path.parts]
+              stem = path.stem.lower()
+              is_document = (
+                  path.suffix.lower() in document_extensions
+                  or stem in document_names
+                  or 'docs' in lower_parts
+                  or 'documentation' in lower_parts
+              )
+              if is_document:
+                  documentation_files.append(name)
+                  try:
+                      with open(path, 'rb') as handle:
+                          documentation_lines += sum(1 for _ in handle)
+                  except OSError:
+                      pass
+
+          document_set = set(documentation_files)
+          source_code = source_comments = source_blank = 0
+          for path, values in raw.items():
+              if path in {'header', 'SUM'} or not isinstance(values, dict) or 'language' not in values or path in document_set:
+                  continue
+              source_code += int(values.get('code', 0))
+              source_comments += int(values.get('comment', 0))
+              source_blank += int(values.get('blank', 0))
+
+          def git(*args):
+              return subprocess.check_output(['git', *args], text=True).strip()
+
+          numstat = subprocess.check_output(
+              ['git', 'log', '--since=24 hours ago', '--numstat', '--format=tformat:'],
+              text=True,
+          )
+          added = deleted = 0
+          for line in numstat.splitlines():
+              parts = line.split('\t')
+              if len(parts) >= 2 and parts[0].isdigit() and parts[1].isdigit():
+                  added += int(parts[0])
+                  deleted += int(parts[1])
+
+          contributors = git('shortlog', '-sne', 'HEAD').splitlines()
+          latest = git('log', '-1', '--format=%H%x1f%cI%x1f%s').split('\x1f', 2)
+          first_date = git('log', '--reverse', '--format=%cI').splitlines()[0]
+          sum_values = raw.get('SUM', {})
+          languages = sorted(
+              ({'language': language, **values} for language, values in per_language.items()),
+              key=lambda item: (-item['code'], item['language']),
+          )
+          result = {
+              'repository': repo,
+              'head_sha': latest[0],
+              'latest_commit_at': latest[1],
+              'latest_commit_subject': latest[2],
+              'first_commit_at': first_date,
+              'commits': int(git('rev-list', '--count', 'HEAD')),
+              'contributors': len(contributors),
+              'tracked_files': len(files),
+              'counted_text_files': counted_files,
+              'binary_or_unclassified_files': len(files) - counted_files,
+              'tracked_bytes': tracked_bytes,
+              'cloc_total_lines': int(sum_values.get('blank', 0)) + int(sum_values.get('comment', 0)) + int(sum_values.get('code', 0)),
+              'cloc_code': int(sum_values.get('code', 0)),
+              'cloc_comments': int(sum_values.get('comment', 0)),
+              'cloc_blank': int(sum_values.get('blank', 0)),
+              'source_code_excluding_documentation': source_code,
+              'source_comments_excluding_documentation': source_comments,
+              'source_blank_excluding_documentation': source_blank,
+              'documentation_files': len(documentation_files),
+              'documentation_lines': documentation_lines,
+              'languages': len(languages),
+              'language_breakdown': languages,
+              'added_last_24h': added,
+              'deleted_last_24h': deleted,
+              'net_last_24h': added - deleted,
+              'measured_at_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+          }
+          print('CLARYEL_STATS_BEGIN')
+          print(json.dumps(result, ensure_ascii=False, separators=(',', ':')))
+          print('CLARYEL_STATS_END')
+          PY

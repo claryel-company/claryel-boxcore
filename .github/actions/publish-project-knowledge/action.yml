@@ -93,9 +93,10 @@ runs:
         docker exec "$container" mkdir -p "$container_root/data"
         docker cp "$host_root/." "$container:$container_root/data/"
         docker cp "$GITHUB_ACTION_PATH/sync_server.py" "$container:$container_root/sync_server.py"
+        docker cp "$GITHUB_ACTION_PATH/sync_server_v2.py" "$container:$container_root/sync_server_v2.py"
         run_key="github:${CLARYEL_REPOSITORY}:${CLARYEL_REVISION}:${GITHUB_RUN_ID}:${GITHUB_RUN_ATTEMPT}"
         set +e
-        docker exec "$container" python "$container_root/sync_server.py" \
+        docker exec "$container" python "$container_root/sync_server_v2.py" \
           --root "$container_root/data" \
           --run-key "$run_key" \
           --trigger-kind "$CLARYEL_TRIGGER_KIND" \

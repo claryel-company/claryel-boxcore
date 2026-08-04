@@ -1,4 +1,4 @@
-name: Publish project knowledge
+name: Validate project knowledge publisher
 
 on:
   pull_request:
@@ -8,18 +8,17 @@ on:
   push:
     branches:
       - main
-  schedule:
-    - cron: "23 2 * * *"
+    paths:
+      - ".github/actions/publish-project-knowledge/**"
+      - ".github/workflows/publish-project-knowledge.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
-  issues: read
-  pull-requests: read
 
 concurrency:
   group: project-knowledge-${{ github.repository }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   validate:
@@ -59,48 +58,10 @@ jobs:
             exit 1
           fi
 
-  publish:
-    if: github.event_name != 'pull_request'
-    needs: validate
-    runs-on: [self-hosted, linux, x64, claryel-deploy]
-    timeout-minutes: 90
-    steps:
-      - name: Checkout authoritative revision
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-          fetch-depth: 1
-
-      - name: Resolve trigger kind
-        id: trigger
-        shell: bash
-        run: |
-          case "${GITHUB_EVENT_NAME}" in
-            push) value=push ;;
-            schedule) value=schedule ;;
-            workflow_dispatch) value=manual ;;
-            *) value=reconcile ;;
-          esac
-          printf 'value=%s\n' "$value" >>"$GITHUB_OUTPUT"
-
-      - name: Publish repository documentation and project state
-        id: knowledge
-        uses: ./.github/actions/publish-project-knowledge
-        with:
-          github-token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          revision: ${{ github.sha }}
-          default-branch: ${{ github.event.repository.default_branch }}
-          visibility: public
-          trigger-kind: ${{ steps.trigger.outputs.value }}
-
-      - name: Report bounded synchronization counts
+      - name: Confirm delegated publication boundary
         shell: bash
         run: |
           printf '%s\n' \
-            "status=${{ steps.knowledge.outputs.status }}" \
-            "created=${{ steps.knowledge.outputs.created }}" \
-            "updated=${{ steps.knowledge.outputs.updated }}" \
-            "unchanged=${{ steps.knowledge.outputs.unchanged }}" \
-            "missing=${{ steps.knowledge.outputs.missing }}" \
-            "failed=${{ steps.knowledge.outputs.failed }}"
+            'publication_mode=delegated-to-private-fleet' \
+            'private_self_hosted_runner_exposed=false' \
+            'scheduled_publication_owner=claryel-company/claryel-fleet'

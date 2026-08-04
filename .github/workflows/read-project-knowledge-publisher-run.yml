@@ -1,0 +1,64 @@
+name: Read project knowledge publisher run
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/read-project-knowledge-publisher-run.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TARGET_WORKFLOW: publish-project-knowledge.yml
+    steps:
+      - name: Read latest main publication run and bounded result lines
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          runs="$RUNNER_TEMP/runs.json"
+          jobs="$RUNNER_TEMP/jobs.json"
+          gh api "/repos/${GITHUB_REPOSITORY}/actions/workflows/${TARGET_WORKFLOW}/runs?branch=main&per_page=10" >"$runs"
+          readarray -t facts < <(python3 - "$runs" <<'PY'
+          from pathlib import Path
+          import json,sys
+          runs=json.loads(Path(sys.argv[1]).read_text())["workflow_runs"]
+          candidates=[run for run in runs if run.get("event") in {"push","schedule","workflow_dispatch"}]
+          if not candidates: raise SystemExit("no main publisher run")
+          run=candidates[0]
+          print(run["id"])
+          print(run.get("status") or "")
+          print(run.get("conclusion") or "")
+          print(run.get("head_sha") or "")
+          PY
+          )
+          run_id="${facts[0]}"
+          printf 'run_id=%s status=%s conclusion=%s head_sha=%s\n' \
+            "$run_id" "${facts[1]}" "${facts[2]}" "${facts[3]}"
+          gh api "/repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}/jobs?per_page=100" >"$jobs"
+          python3 - "$jobs" <<'PY'
+          from pathlib import Path
+          import json,sys
+          for job in json.loads(Path(sys.argv[1]).read_text())["jobs"]:
+              print(f"job={job.get('name')} status={job.get('status')} conclusion={job.get('conclusion')} id={job.get('id')}")
+          PY
+          job_id="$(python3 - "$jobs" <<'PY'
+          from pathlib import Path
+          import json,sys
+          jobs=json.loads(Path(sys.argv[1]).read_text())["jobs"]
+          candidates=[job for job in jobs if job.get("name") == "publish"]
+          if not candidates: raise SystemExit("publish job not found")
+          print(candidates[0]["id"])
+          PY
+          )"
+          log="$RUNNER_TEMP/publish.log"
+          gh api "/repos/${GITHUB_REPOSITORY}/actions/jobs/${job_id}/logs" >"$log"
+          printf '%s\n' '=== RESULT AND ERROR LINES ==='
+          grep -E -i 'status=|created=|updated=|unchanged=|missing=|failed=|published_sources|indexed_bytes|collector_error|synchronizer_error|traceback|##\[error\]|error:|assert|undefined|permission denied|timeout|timed out' "$log" | tail -n 480 || true
+          printf '%s\n' '=== FINAL 300 LINES ==='
+          tail -n 300 "$log"

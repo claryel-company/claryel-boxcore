@@ -1,0 +1,130 @@
+name: Publish CLARYEL project knowledge
+description: Publish one active repository into the local versioned PostgreSQL, encrypted object and Qdrant knowledge plane.
+
+inputs:
+  github-token:
+    description: Short-lived token scoped to the calling repository.
+    required: true
+  repository:
+    description: Repository in owner/name form.
+    required: true
+  revision:
+    description: Full authoritative commit SHA.
+    required: true
+  default-branch:
+    description: Repository default branch.
+    required: true
+  visibility:
+    description: public or private.
+    required: true
+  trigger-kind:
+    description: initial-load, push, schedule, manual or reconcile.
+    required: false
+    default: reconcile
+
+outputs:
+  status:
+    description: succeeded or partial.
+    value: ${{ steps.publish.outputs.status }}
+  created:
+    description: Number of new logical sources.
+    value: ${{ steps.publish.outputs.created }}
+  updated:
+    description: Number of updated logical sources.
+    value: ${{ steps.publish.outputs.updated }}
+  unchanged:
+    description: Number of unchanged logical sources.
+    value: ${{ steps.publish.outputs.unchanged }}
+  missing:
+    description: Number of authoritative sources marked missing.
+    value: ${{ steps.publish.outputs.missing }}
+  failed:
+    description: Number of failed logical sources.
+    value: ${{ steps.publish.outputs.failed }}
+
+runs:
+  using: composite
+  steps:
+    - name: Collect repository documentation and GitHub state
+      shell: bash
+      env:
+        CLARYEL_GITHUB_TOKEN: ${{ inputs.github-token }}
+        CLARYEL_REPOSITORY: ${{ inputs.repository }}
+        CLARYEL_REVISION: ${{ inputs.revision }}
+        CLARYEL_DEFAULT_BRANCH: ${{ inputs.default-branch }}
+        CLARYEL_VISIBILITY: ${{ inputs.visibility }}
+      run: |
+        set -Eeuo pipefail
+        umask 077
+        output="$RUNNER_TEMP/claryel-project-knowledge-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+        rm -rf "$output"
+        mkdir -p "$output"
+        python3 "$GITHUB_ACTION_PATH/collect.py" \
+          --output "$output" \
+          --repository "$CLARYEL_REPOSITORY" \
+          --revision "$CLARYEL_REVISION" \
+          --default-branch "$CLARYEL_DEFAULT_BRANCH" \
+          --visibility "$CLARYEL_VISIBILITY" \
+          --github-token "$CLARYEL_GITHUB_TOKEN"
+        test -s "$output/manifest.json"
+
+    - name: Synchronize accepted sources through local governed services
+      id: publish
+      shell: bash
+      env:
+        CLARYEL_REPOSITORY: ${{ inputs.repository }}
+        CLARYEL_REVISION: ${{ inputs.revision }}
+        CLARYEL_TRIGGER_KIND: ${{ inputs.trigger-kind }}
+      run: |
+        set -Eeuo pipefail
+        umask 077
+        [[ "$(hostname -s)" == "claryel01" ]]
+        container=claryel-box-agent-fabric-1
+        host_root="$RUNNER_TEMP/claryel-project-knowledge-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+        container_root="/tmp/claryel-project-knowledge-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+        host_receipt="$host_root/receipt.json"
+        cleanup() {
+          set +e
+          docker exec "$container" rm -rf "$container_root" >/dev/null 2>&1 || true
+          rm -rf "$host_root"
+        }
+        trap cleanup EXIT INT TERM HUP
+        docker inspect "$container" >/dev/null
+        docker exec "$container" mkdir -p "$container_root/data"
+        docker cp "$host_root/." "$container:$container_root/data/"
+        docker cp "$GITHUB_ACTION_PATH/sync_server.py" "$container:$container_root/sync_server.py"
+        run_key="github:${CLARYEL_REPOSITORY}:${CLARYEL_REVISION}:${GITHUB_RUN_ID}:${GITHUB_RUN_ATTEMPT}"
+        set +e
+        docker exec "$container" python "$container_root/sync_server.py" \
+          --root "$container_root/data" \
+          --run-key "$run_key" \
+          --trigger-kind "$CLARYEL_TRIGGER_KIND" \
+          --receipt "$container_root/receipt.json"
+        sync_status=$?
+        set -e
+        docker cp "$container:$container_root/receipt.json" "$host_receipt"
+        python3 - "$host_receipt" "$GITHUB_OUTPUT" <<'PY'
+        from pathlib import Path
+        import json
+        import sys
+        receipt = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+        counts = receipt.get("counts") or {}
+        with Path(sys.argv[2]).open("a", encoding="utf-8") as output:
+            output.write(f"status={receipt.get('status')}\n")
+            for key in ("created", "updated", "unchanged", "missing", "failed"):
+                output.write(f"{key}={int(counts.get(key) or 0)}\n")
+        print(json.dumps({
+            "repository": receipt.get("repository"),
+            "revision": receipt.get("revision"),
+            "status": receipt.get("status"),
+            "counts": counts,
+            "distinct_document_count": receipt.get("distinct_document_count"),
+            "source_text_retained": receipt.get("source_text_retained"),
+            "credentials_retained": receipt.get("credentials_retained"),
+        }))
+        PY
+        if [[ "$sync_status" -ne 0 ]]; then
+          exit "$sync_status"
+        fi
+        trap - EXIT INT TERM HUP
+        cleanup

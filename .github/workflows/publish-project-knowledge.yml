@@ -1,0 +1,106 @@
+name: Publish project knowledge
+
+on:
+  pull_request:
+    paths:
+      - ".github/actions/publish-project-knowledge/**"
+      - ".github/workflows/publish-project-knowledge.yml"
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "23 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+concurrency:
+  group: project-knowledge-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Validate reusable action sources
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          action=.github/actions/publish-project-knowledge/action.yml
+          collector=.github/actions/publish-project-knowledge/collect.py
+          synchronizer=.github/actions/publish-project-knowledge/sync_server.py
+          test -s "$action"
+          python3 -m py_compile "$collector" "$synchronizer"
+          python3 - <<'PY'
+          from pathlib import Path
+          import yaml
+          action = yaml.safe_load(Path('.github/actions/publish-project-knowledge/action.yml').read_text())
+          assert action['runs']['using'] == 'composite'
+          assert set(action['outputs']) == {'status', 'created', 'updated', 'unchanged', 'missing', 'failed'}
+          PY
+          grep -Fq 'project-knowledge-publisher-v1' "$collector"
+          grep -Fq 'project-knowledge-publisher-v1' "$synchronizer"
+          grep -Fq 'knowledge_source_versions' "$synchronizer"
+          grep -Fq 'repository_contexts' "$synchronizer"
+          grep -Fq 'architecture_record_versions' "$synchronizer"
+          grep -Fq 'schema_assets' "$synchronizer"
+          grep -Fq 'next_steps' "$synchronizer"
+          if grep -Eiq '\b(DROP|TRUNCATE)\b' "$synchronizer"; then
+            printf '%s\n' 'Synchronizer contains destructive SQL.' >&2
+            exit 1
+          fi
+
+  publish:
+    if: github.event_name != 'pull_request'
+    needs: validate
+    runs-on: [self-hosted, linux, x64, claryel-deploy]
+    timeout-minutes: 90
+    steps:
+      - name: Checkout authoritative revision
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Resolve trigger kind
+        id: trigger
+        shell: bash
+        run: |
+          case "${GITHUB_EVENT_NAME}" in
+            push) value=push ;;
+            schedule) value=schedule ;;
+            workflow_dispatch) value=manual ;;
+            *) value=reconcile ;;
+          esac
+          printf 'value=%s\n' "$value" >>"$GITHUB_OUTPUT"
+
+      - name: Publish repository documentation and project state
+        id: knowledge
+        uses: ./.github/actions/publish-project-knowledge
+        with:
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          revision: ${{ github.sha }}
+          default-branch: ${{ github.event.repository.default_branch }}
+          visibility: public
+          trigger-kind: ${{ steps.trigger.outputs.value }}
+
+      - name: Report bounded synchronization counts
+        shell: bash
+        run: |
+          printf '%s\n' \
+            "status=${{ steps.knowledge.outputs.status }}" \
+            "created=${{ steps.knowledge.outputs.created }}" \
+            "updated=${{ steps.knowledge.outputs.updated }}" \
+            "unchanged=${{ steps.knowledge.outputs.unchanged }}" \
+            "missing=${{ steps.knowledge.outputs.missing }}" \
+            "failed=${{ steps.knowledge.outputs.failed }}"

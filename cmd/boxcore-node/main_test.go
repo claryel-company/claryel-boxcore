@@ -31,6 +31,7 @@ func TestHealthEndpointIsReadOnlyAndHardened(t *testing.T) {
 func TestMutationMethodsAreRejected(t *testing.T) {
 	handler := newHandler()
 	request := httptest.NewRequest(http.MethodPost, "/capabilities", strings.NewReader("{}"))
+	request.RemoteAddr = "127.0.0.1:1234"
 	response := httptest.NewRecorder()
 	handler.ServeHTTP(response, request)
 
@@ -45,6 +46,7 @@ func TestMutationMethodsAreRejected(t *testing.T) {
 func TestHeadReturnsNoBody(t *testing.T) {
 	handler := newHandler()
 	request := httptest.NewRequest(http.MethodHead, "/capabilities", nil)
+	request.RemoteAddr = "127.0.0.1:1234"
 	response := httptest.NewRecorder()
 	handler.ServeHTTP(response, request)
 
@@ -53,5 +55,41 @@ func TestHeadReturnsNoBody(t *testing.T) {
 	}
 	if response.Body.Len() != 0 {
 		t.Fatalf("expected empty HEAD body, got %q", response.Body.String())
+	}
+}
+
+func TestCapabilitiesRefusesNonLoopback(t *testing.T) {
+	handler := newHandler()
+	request := httptest.NewRequest(http.MethodGet, "/capabilities", nil)
+	request.RemoteAddr = "192.168.1.50:54321"
+	response := httptest.NewRecorder()
+	handler.ServeHTTP(response, request)
+
+	if response.Code != http.StatusForbidden {
+		t.Fatalf("expected 403, got %d", response.Code)
+	}
+}
+
+func TestCapabilitiesAllowsLoopback(t *testing.T) {
+	handler := newHandler()
+	request := httptest.NewRequest(http.MethodGet, "/capabilities", nil)
+	request.RemoteAddr = "127.0.0.1:1234"
+	response := httptest.NewRecorder()
+	handler.ServeHTTP(response, request)
+
+	if response.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d", response.Code)
+	}
+}
+
+func TestHealthRemainsOpenOffLoopback(t *testing.T) {
+	handler := newHandler()
+	request := httptest.NewRequest(http.MethodGet, "/health", nil)
+	request.RemoteAddr = "192.168.1.50:54321"
+	response := httptest.NewRecorder()
+	handler.ServeHTTP(response, request)
+
+	if response.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d", response.Code)
 	}
 }

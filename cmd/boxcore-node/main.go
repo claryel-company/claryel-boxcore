@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"time"
@@ -69,9 +70,15 @@ func newHandler() http.Handler {
 			"time":    time.Now().UTC().Format(time.RFC3339),
 		}, nil
 	}))
-	mux.HandleFunc("/capabilities", readOnlyJSON(func() (any, error) {
-		return discovery.Discover()
-	}))
+	mux.HandleFunc("/capabilities", func(writer http.ResponseWriter, request *http.Request) {
+		if !isLoopbackRequest(request) {
+			http.Error(writer, "capabilities are localhost-only", http.StatusForbidden)
+			return
+		}
+		readOnlyJSON(func() (any, error) {
+			return discovery.Discover()
+		})(writer, request)
+	})
 
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		writer.Header().Set("Cache-Control", "no-store")
@@ -81,6 +88,15 @@ func newHandler() http.Handler {
 		writer.Header().Set("X-Frame-Options", "DENY")
 		mux.ServeHTTP(writer, request)
 	})
+}
+
+func isLoopbackRequest(request *http.Request) bool {
+	host, _, err := net.SplitHostPort(request.RemoteAddr)
+	if err != nil {
+		host = request.RemoteAddr
+	}
+	ip := net.ParseIP(host)
+	return ip != nil && ip.IsLoopback()
 }
 
 func readOnlyJSON(build func() (any, error)) http.HandlerFunc {

@@ -379,8 +379,13 @@ def main() -> int:
     parser.add_argument("--revision", required=True)
     parser.add_argument("--default-branch", required=True)
     parser.add_argument("--visibility", choices=("public", "private"), required=True)
-    parser.add_argument("--github-token", required=True)
+    parser.add_argument("--github-token", help="rejected; set CLARYEL_GITHUB_TOKEN instead")
     args = parser.parse_args()
+    if getattr(args, "github_token", None):
+        raise SystemExit("refusing --github-token on argv; set CLARYEL_GITHUB_TOKEN")
+    github_token = os.environ.get("CLARYEL_GITHUB_TOKEN", "").strip()
+    if not github_token:
+        raise SystemExit("CLARYEL_GITHUB_TOKEN is required")
 
     output = Path(args.output).resolve()
     payload_root = output / "payload"
@@ -462,20 +467,20 @@ def main() -> int:
         )
 
     api_base = f"https://api.github.com/repos/{args.repository}"
-    repository_data = github_json(args.github_token, api_base)
+    repository_data = github_json(github_token, api_base)
     issue_data = [
         item
         for item in github_json(
-            args.github_token,
+            github_token,
             api_base + "/issues?state=all&sort=updated&direction=desc&per_page=100",
         )
         if "pull_request" not in item
     ][:MAX_GITHUB_RECORDS]
     pull_data = github_json(
-        args.github_token,
+        github_token,
         api_base + "/pulls?state=all&sort=updated&direction=desc&per_page=100",
     )[:MAX_GITHUB_RECORDS]
-    release_data = github_json(args.github_token, api_base + "/releases?per_page=100")[:MAX_GITHUB_RECORDS]
+    release_data = github_json(github_token, api_base + "/releases?per_page=100")[:MAX_GITHUB_RECORDS]
 
     metadata_content = render_records(
         f"{args.repository} repository context",

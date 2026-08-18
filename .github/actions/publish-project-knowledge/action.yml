@@ -64,8 +64,7 @@ runs:
           --repository "$CLARYEL_REPOSITORY" \
           --revision "$CLARYEL_REVISION" \
           --default-branch "$CLARYEL_DEFAULT_BRANCH" \
-          --visibility "$CLARYEL_VISIBILITY" \
-          --github-token "$CLARYEL_GITHUB_TOKEN"
+          --visibility "$CLARYEL_VISIBILITY"
         test -s "$output/manifest.json"
 
     - name: Synchronize accepted sources through local governed services
